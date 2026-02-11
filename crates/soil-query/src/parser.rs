@@ -236,12 +236,16 @@ impl SoilProfile {
         }
 
         // Pure helper function for parsing floats
-        let parse_f64_at = |idx: usize, field_name: &str| -> Result<f64> {
-            parts[idx].parse::<f64>()
-                .map_err(|_| SoilError::InvalidValue {
-                    field: field_name.to_string(),
-                    value: parts[idx].to_string(),
-                })
+        // Returns -99.0 for unparseable values (will become None via optional_f64)
+        let parse_f64_at = |idx: usize, _field_name: &str| -> Result<f64> {
+            match parts[idx].parse::<f64>() {
+                Ok(val) => Ok(val),
+                Err(_) => {
+                    // Invalid numeric value (e.g., "*****")
+                    // Treat as missing data
+                    Ok(MISSING_VALUE)
+                }
+            }
         };
 
         Ok(SoilLayer {
