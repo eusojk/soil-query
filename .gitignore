@@ -24,3 +24,5 @@ Thumbs.db
 # Custom
 _tmp/
 CHANGELOG.md
+
+test_data/

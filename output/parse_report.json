@@ -1,0 +1,56 @@
+{
+  "summary": {
+    "total_files": 10,
+    "total_profiles": 161746,
+    "successful": 161746,
+    "failed": 0,
+    "duration_seconds": 32.7457925
+  },
+  "by_country": {
+    "PS": {
+      "profiles": 5,
+      "errors": 0
+    },
+    "SM": {
+      "profiles": 1,
+      "errors": 0
+    },
+    "BM": {
+      "profiles": 5,
+      "errors": 0
+    },
+    "NR": {
+      "profiles": 2,
+      "errors": 0
+    },
+    "US": {
+      "profiles": 161724,
+      "errors": 0
+    },
+    "GI": {
+      "profiles": 1,
+      "errors": 0
+    },
+    "NF": {
+      "profiles": 2,
+      "errors": 0
+    },
+    "MC": {
+      "profiles": 1,
+      "errors": 0
+    },
+    "AW": {
+      "profiles": 3,
+      "errors": 0
+    },
+    "LI": {
+      "profiles": 2,
+      "errors": 0
+    }
+  },
+  "errors": [],
+  "performance": {
+    "profiles_per_second": 4939.443746856943,
+    "database_size_mb": 334.171875
+  }
+}
