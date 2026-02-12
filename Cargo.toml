@@ -1,6 +1,6 @@
 [workspace]
 members = [
-    "crates/soil-query", "crates/soil-query-parser",
+    "crates/soil-query", "crates/soil-query-api", "crates/soil-query-parser",
 ]
 resolver = "2"
 
@@ -21,3 +21,9 @@ walkdir = "2.5"
 indicatif = "0.17"
 serde_json = "1.0"
 chrono = "0.4"
+axum = "0.7"
+tokio = { version = "1", features = ["full"] }
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors", "trace"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
