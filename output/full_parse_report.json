@@ -1,0 +1,916 @@
+{
+  "summary": {
+    "total_files": 225,
+    "total_profiles": 1984797,
+    "successful": 1984797,
+    "failed": 0,
+    "duration_seconds": 583.9034255
+  },
+  "by_country": {
+    "SC": {
+      "profiles": 49,
+      "errors": 0
+    },
+    "MV": {
+      "profiles": 54,
+      "errors": 0
+    },
+    "TN": {
+      "profiles": 1445,
+      "errors": 0
+    },
+    "EG": {
+      "profiles": 2443,
+      "errors": 0
+    },
+    "FO": {
+      "profiles": 82,
+      "errors": 0
+    },
+    "BS": {
+      "profiles": 466,
+      "errors": 0
+    },
+    "CZ": {
+      "profiles": 1414,
+      "errors": 0
+    },
+    "IS": {
+      "profiles": 1895,
+      "errors": 0
+    },
+    "BA": {
+      "profiles": 843,
+      "errors": 0
+    },
+    "LB": {
+      "profiles": 161,
+      "errors": 0
+    },
+    "IR": {
+      "profiles": 15648,
+      "errors": 0
+    },
+    "MA": {
+      "profiles": 5171,
+      "errors": 0
+    },
+    "NE": {
+      "profiles": 6131,
+      "errors": 0
+    },
+    "PK": {
+      "profiles": 9712,
+      "errors": 0
+    },
+    "BD": {
+      "profiles": 1889,
+      "errors": 0
+    },
+    "TF": {
+      "profiles": 227,
+      "errors": 0
+    },
+    "DE": {
+      "profiles": 6779,
+      "errors": 0
+    },
+    "SZ": {
+      "profiles": 228,
+      "errors": 0
+    },
+    "SA": {
+      "profiles": 7032,
+      "errors": 0
+    },
+    "CK": {
+      "profiles": 34,
+      "errors": 0
+    },
+    "BZ": {
+      "profiles": 321,
+      "errors": 0
+    },
+    "BG": {
+      "profiles": 1826,
+      "errors": 0
+    },
+    "AG": {
+      "profiles": 21,
+      "errors": 0
+    },
+    "SR": {
+      "profiles": 2711,
+      "errors": 0
+    },
+    "CV": {
+      "profiles": 109,
+      "errors": 0
+    },
+    "HM": {
+      "profiles": 6,
+      "errors": 0
+    },
+    "MT": {
+      "profiles": 12,
+      "errors": 0
+    },
+    "BH": {
+      "profiles": 17,
+      "errors": 0
+    },
+    "TV": {
+      "profiles": 11,
+      "errors": 0
+    },
+    "UZ": {
+      "profiles": 5904,
+      "errors": 0
+    },
+    "AO": {
+      "profiles": 15012,
+      "errors": 0
+    },
+    "EE": {
+      "profiles": 1128,
+      "errors": 0
+    },
+    "YE": {
+      "profiles": 3736,
+      "errors": 0
+    },
+    "SV": {
+      "profiles": 268,
+      "errors": 0
+    },
+    "VU": {
+      "profiles": 319,
+      "errors": 0
+    },
+    "BN": {
+      "profiles": 76,
+      "errors": 0
+    },
+    "TW": {
+      "profiles": 546,
+      "errors": 0
+    },
+    "MX": {
+      "profiles": 25715,
+      "errors": 0
+    },
+    "SG": {
+      "profiles": 15,
+      "errors": 0
+    },
+    "TJ": {
+      "profiles": 2021,
+      "errors": 0
+    },
+    "AI": {
+      "profiles": 10,
+      "errors": 0
+    },
+    "CY": {
+      "profiles": 178,
+      "errors": 0
+    },
+    "IT": {
+      "profiles": 5223,
+      "errors": 0
+    },
+    "BW": {
+      "profiles": 7078,
+      "errors": 0
+    },
+    "KR": {
+      "profiles": 1729,
+      "errors": 0
+    },
+    "MR": {
+      "profiles": 3042,
+      "errors": 0
+    },
+    "NC": {
+      "profiles": 369,
+      "errors": 0
+    },
+    "MK": {
+      "profiles": 387,
+      "errors": 0
+    },
+    "MN": {
+      "profiles": 23310,
+      "errors": 0
+    },
+    "GB": {
+      "profiles": 6988,
+      "errors": 0
+    },
+    "SI": {
+      "profiles": 335,
+      "errors": 0
+    },
+    "HU": {
+      "profiles": 1586,
+      "errors": 0
+    },
+    "PE": {
+      "profiles": 15103,
+      "errors": 0
+    },
+    "PR": {
+      "profiles": 153,
+      "errors": 0
+    },
+    "SO": {
+      "profiles": 6674,
+      "errors": 0
+    },
+    "AZ": {
+      "profiles": 1364,
+      "errors": 0
+    },
+    "KN": {
+      "profiles": 10,
+      "errors": 0
+    },
+    "LI": {
+      "profiles": 2,
+      "errors": 0
+    },
+    "NI": {
+      "profiles": 1550,
+      "errors": 0
+    },
+    "KE": {
+      "profiles": 6756,
+      "errors": 0
+    },
+    "LA": {
+      "profiles": 2830,
+      "errors": 0
+    },
+    "PT": {
+      "profiles": 1514,
+      "errors": 0
+    },
+    "TR": {
+      "profiles": 12031,
+      "errors": 0
+    },
+    "BO": {
+      "profiles": 13069,
+      "errors": 0
+    },
+    "GU": {
+      "profiles": 15,
+      "errors": 0
+    },
+    "TO": {
+      "profiles": 61,
+      "errors": 0
+    },
+    "NU": {
+      "profiles": 8,
+      "errors": 0
+    },
+    "ES": {
+      "profiles": 8041,
+      "errors": 0
+    },
+    "CM": {
+      "profiles": 5514,
+      "errors": 0
+    },
+    "NA": {
+      "profiles": 9719,
+      "errors": 0
+    },
+    "GE": {
+      "profiles": 1118,
+      "errors": 0
+    },
+    "CR": {
+      "profiles": 689,
+      "errors": 0
+    },
+    "KW": {
+      "profiles": 91,
+      "errors": 0
+    },
+    "TL": {
+      "profiles": 200,
+      "errors": 0
+    },
+    "JP": {
+      "profiles": 6564,
+      "errors": 0
+    },
+    "TG": {
+      "profiles": 684,
+      "errors": 0
+    },
+    "IN": {
+      "profiles": 40467,
+      "errors": 0
+    },
+    "ML": {
+      "profiles": 8364,
+      "errors": 0
+    },
+    "GY": {
+      "profiles": 2507,
+      "errors": 0
+    },
+    "TH": {
+      "profiles": 6463,
+      "errors": 0
+    },
+    "MP": {
+      "profiles": 33,
+      "errors": 0
+    },
+    "MM": {
+      "profiles": 8779,
+      "errors": 0
+    },
+    "KI": {
+      "profiles": 121,
+      "errors": 0
+    },
+    "KH": {
+      "profiles": 2203,
+      "errors": 0
+    },
+    "CH": {
+      "profiles": 704,
+      "errors": 0
+    },
+    "CL": {
+      "profiles": 11419,
+      "errors": 0
+    },
+    "BE": {
+      "profiles": 565,
+      "errors": 0
+    },
+    "BR": {
+      "profiles": 102731,
+      "errors": 0
+    },
+    "CD": {
+      "profiles": 27177,
+      "errors": 0
+    },
+    "AT": {
+      "profiles": 1439,
+      "errors": 0
+    },
+    "DO": {
+      "profiles": 580,
+      "errors": 0
+    },
+    "GA": {
+      "profiles": 3160,
+      "errors": 0
+    },
+    "AR": {
+      "profiles": 39912,
+      "errors": 0
+    },
+    "ZA": {
+      "profiles": 16459,
+      "errors": 0
+    },
+    "IQ": {
+      "profiles": 3334,
+      "errors": 0
+    },
+    "DJ": {
+      "profiles": 262,
+      "errors": 0
+    },
+    "AS": {
+      "profiles": 19,
+      "errors": 0
+    },
+    "EH": {
+      "profiles": 250,
+      "errors": 0
+    },
+    "MG": {
+      "profiles": 7662,
+      "errors": 0
+    },
+    "SL": {
+      "profiles": 900,
+      "errors": 0
+    },
+    "WF": {
+      "profiles": 9,
+      "errors": 0
+    },
+    "LK": {
+      "profiles": 872,
+      "errors": 0
+    },
+    "LU": {
+      "profiles": 44,
+      "errors": 0
+    },
+    "MU": {
+      "profiles": 90,
+      "errors": 0
+    },
+    "SB": {
+      "profiles": 661,
+      "errors": 0
+    },
+    "NP": {
+      "profiles": 1951,
+      "errors": 0
+    },
+    "GM": {
+      "profiles": 140,
+      "errors": 0
+    },
+    "BB": {
+      "profiles": 11,
+      "errors": 0
+    },
+    "FI": {
+      "profiles": 9343,
+      "errors": 0
+    },
+    "MS": {
+      "profiles": 51,
+      "errors": 0
+    },
+    "ET": {
+      "profiles": 12626,
+      "errors": 0
+    },
+    "GW": {
+      "profiles": 476,
+      "errors": 0
+    },
+    "MZ": {
+      "profiles": 9814,
+      "errors": 0
+    },
+    "LC": {
+      "profiles": 14,
+      "errors": 0
+    },
+    "MC": {
+      "profiles": 1,
+      "errors": 0
+    },
+    "TT": {
+      "profiles": 97,
+      "errors": 0
+    },
+    "QA": {
+      "profiles": 58,
+      "errors": 0
+    },
+    "GS": {
+      "profiles": 111,
+      "errors": 0
+    },
+    "PN": {
+      "profiles": 6,
+      "errors": 0
+    },
+    "SD": {
+      "profiles": 12805,
+      "errors": 0
+    },
+    "OM": {
+      "profiles": 1083,
+      "errors": 0
+    },
+    "VE": {
+      "profiles": 10527,
+      "errors": 0
+    },
+    "AL": {
+      "profiles": 558,
+      "errors": 0
+    },
+    "PF": {
+      "profiles": 395,
+      "errors": 0
+    },
+    "SS": {
+      "profiles": 7468,
+      "errors": 0
+    },
+    "AF": {
+      "profiles": 7393,
+      "errors": 0
+    },
+    "ZM": {
+      "profiles": 8994,
+      "errors": 0
+    },
+    "GI": {
+      "profiles": 1,
+      "errors": 0
+    },
+    "CA": {
+      "profiles": 244237,
+      "errors": 0
+    },
+    "NZ": {
+      "profiles": 4735,
+      "errors": 0
+    },
+    "DM": {
+      "profiles": 47,
+      "errors": 0
+    },
+    "LR": {
+      "profiles": 1161,
+      "errors": 0
+    },
+    "MY": {
+      "profiles": 4191,
+      "errors": 0
+    },
+    "PS": {
+      "profiles": 5,
+      "errors": 0
+    },
+    "US": {
+      "profiles": 161724,
+      "errors": 0
+    },
+    "PY": {
+      "profiles": 5074,
+      "errors": 0
+    },
+    "CO": {
+      "profiles": 12843,
+      "errors": 0
+    },
+    "AW": {
+      "profiles": 3,
+      "errors": 0
+    },
+    "CG": {
+      "profiles": 4011,
+      "errors": 0
+    },
+    "KP": {
+      "profiles": 1991,
+      "errors": 0
+    },
+    "PL": {
+      "profiles": 5964,
+      "errors": 0
+    },
+    "VC": {
+      "profiles": 19,
+      "errors": 0
+    },
+    "PH": {
+      "profiles": 4780,
+      "errors": 0
+    },
+    "TD": {
+      "profiles": 8782,
+      "errors": 0
+    },
+    "AD": {
+      "profiles": 8,
+      "errors": 0
+    },
+    "IO": {
+      "profiles": 12,
+      "errors": 0
+    },
+    "RO": {
+      "profiles": 3969,
+      "errors": 0
+    },
+    "MD": {
+      "profiles": 581,
+      "errors": 0
+    },
+    "SM": {
+      "profiles": 1,
+      "errors": 0
+    },
+    "KZ": {
+      "profiles": 46560,
+      "errors": 0
+    },
+    "JO": {
+      "profiles": 1058,
+      "errors": 0
+    },
+    "AE": {
+      "profiles": 322,
+      "errors": 0
+    },
+    "TM": {
+      "profiles": 6351,
+      "errors": 0
+    },
+    "HR": {
+      "profiles": 1124,
+      "errors": 0
+    },
+    "NL": {
+      "profiles": 769,
+      "errors": 0
+    },
+    "GH": {
+      "profiles": 2848,
+      "errors": 0
+    },
+    "PA": {
+      "profiles": 1065,
+      "errors": 0
+    },
+    "PG": {
+      "profiles": 6298,
+      "errors": 0
+    },
+    "RS": {
+      "profiles": 1278,
+      "errors": 0
+    },
+    "SY": {
+      "profiles": 2285,
+      "errors": 0
+    },
+    "BJ": {
+      "profiles": 1369,
+      "errors": 0
+    },
+    "IL": {
+      "profiles": 363,
+      "errors": 0
+    },
+    "BM": {
+      "profiles": 5,
+      "errors": 0
+    },
+    "FM": {
+      "profiles": 51,
+      "errors": 0
+    },
+    "HN": {
+      "profiles": 1436,
+      "errors": 0
+    },
+    "KM": {
+      "profiles": 41,
+      "errors": 0
+    },
+    "NG": {
+      "profiles": 10847,
+      "errors": 0
+    },
+    "CU": {
+      "profiles": 1763,
+      "errors": 0
+    },
+    "TC": {
+      "profiles": 41,
+      "errors": 0
+    },
+    "TZ": {
+      "profiles": 10746,
+      "errors": 0
+    },
+    "GQ": {
+      "profiles": 345,
+      "errors": 0
+    },
+    "AX": {
+      "profiles": 39,
+      "errors": 0
+    },
+    "AU": {
+      "profiles": 102180,
+      "errors": 0
+    },
+    "CN": {
+      "profiles": 120107,
+      "errors": 0
+    },
+    "DK": {
+      "profiles": 1192,
+      "errors": 0
+    },
+    "GD": {
+      "profiles": 21,
+      "errors": 0
+    },
+    "ME": {
+      "profiles": 233,
+      "errors": 0
+    },
+    "MH": {
+      "profiles": 51,
+      "errors": 0
+    },
+    "ID": {
+      "profiles": 25870,
+      "errors": 0
+    },
+    "LY": {
+      "profiles": 4535,
+      "errors": 0
+    },
+    "UY": {
+      "profiles": 2509,
+      "errors": 0
+    },
+    "PW": {
+      "profiles": 25,
+      "errors": 0
+    },
+    "RU": {
+      "profiles": 421983,
+      "errors": 0
+    },
+    "BY": {
+      "profiles": 4038,
+      "errors": 0
+    },
+    "BF": {
+      "profiles": 3292,
+      "errors": 0
+    },
+    "UG": {
+      "profiles": 2545,
+      "errors": 0
+    },
+    "UA": {
+      "profiles": 10809,
+      "errors": 0
+    },
+    "NF": {
+      "profiles": 2,
+      "errors": 0
+    },
+    "JM": {
+      "profiles": 1544,
+      "errors": 0
+    },
+    "FJ": {
+      "profiles": 456,
+      "errors": 0
+    },
+    "LV": {
+      "profiles": 1408,
+      "errors": 0
+    },
+    "KG": {
+      "profiles": 3042,
+      "errors": 0
+    },
+    "GT": {
+      "profiles": 1350,
+      "errors": 0
+    },
+    "LS": {
+      "profiles": 410,
+      "errors": 0
+    },
+    "BT": {
+      "profiles": 531,
+      "errors": 0
+    },
+    "LT": {
+      "profiles": 1337,
+      "errors": 0
+    },
+    "RW": {
+      "profiles": 290,
+      "errors": 0
+    },
+    "NO": {
+      "profiles": 10591,
+      "errors": 0
+    },
+    "GN": {
+      "profiles": 2942,
+      "errors": 0
+    },
+    "PM": {
+      "profiles": 12,
+      "errors": 0
+    },
+    "SH": {
+      "profiles": 15,
+      "errors": 0
+    },
+    "SN": {
+      "profiles": 2412,
+      "errors": 0
+    },
+    "VG": {
+      "profiles": 14,
+      "errors": 0
+    },
+    "ZW": {
+      "profiles": 4796,
+      "errors": 0
+    },
+    "VI": {
+      "profiles": 18,
+      "errors": 0
+    },
+    "HT": {
+      "profiles": 313,
+      "errors": 0
+    },
+    "IE": {
+      "profiles": 226,
+      "errors": 0
+    },
+    "CI": {
+      "profiles": 3823,
+      "errors": 0
+    },
+    "EC": {
+      "profiles": 3146,
+      "errors": 0
+    },
+    "KY": {
+      "profiles": 17,
+      "errors": 0
+    },
+    "BI": {
+      "profiles": 301,
+      "errors": 0
+    },
+    "VN": {
+      "profiles": 4261,
+      "errors": 0
+    },
+    "GR": {
+      "profiles": 2676,
+      "errors": 0
+    },
+    "ER": {
+      "profiles": 1394,
+      "errors": 0
+    },
+    "NR": {
+      "profiles": 2,
+      "errors": 0
+    },
+    "FR": {
+      "profiles": 9593,
+      "errors": 0
+    },
+    "CF": {
+      "profiles": 7305,
+      "errors": 0
+    },
+    "FK": {
+      "profiles": 419,
+      "errors": 0
+    },
+    "WS": {
+      "profiles": 60,
+      "errors": 0
+    },
+    "AM": {
+      "profiles": 448,
+      "errors": 0
+    },
+    "SE": {
+      "profiles": 11851,
+      "errors": 0
+    },
+    "DZ": {
+      "profiles": 8577,
+      "errors": 0
+    },
+    "ST": {
+      "profiles": 25,
+      "errors": 0
+    },
+    "MW": {
+      "profiles": 1217,
+      "errors": 0
+    },
+    "SK": {
+      "profiles": 860,
+      "errors": 0
+    }
+  },
+  "errors": [],
+  "performance": {
+    "profiles_per_second": 3399.1871143766734,
+    "database_size_mb": 4102.953125
+  }
+}
