@@ -45,6 +45,42 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
+### Parse .SOL Files into Database
+```bash
+# Parse all .SOL files from a directory
+cargo run --release --bin soil-query-parser -- \
+    --input /path/to/sol_files \
+    --output ./output/soil_data.db \
+    --report ./output/report.json \
+    --verbose
+```
+
+**Example output:**
+```
+soil-query-parser v0.1.0
+Found 225 .SOL files
+
+Processing: US.SOL
+  Parsed 161724 profiles from US.SOL
+  Progress: 161724/161724 (100%)
+✓ US.SOL: 161724 profiles
+
+...
+
+============================================================
+PARSING COMPLETE
+============================================================
+Files processed:    225
+Profiles parsed:    1984797
+Successful:         1984797
+Failed:             0
+Duration:           583.90s
+Profiles/second:    3399
+Database size:      4102.95 MB
+============================================================
+```
+
+
 ### Run the Example
 ```bash
 cargo run --example parse_sol
@@ -72,22 +108,75 @@ First Layer (depth=5 cm):
 ```
 soil-query/
 ├── crates/
-│   └── soil-query/              # Core library 
+│   ├── soil-query/              # Core library 
+│   │   ├── src/
+│   │   │   ├── lib.rs           # Public API
+│   │   │   ├── types.rs         # Data structures
+│   │   │   ├── parser.rs        # .SOL parser & serializer
+│   │   │   ├── error.rs         # Error types
+│   │   │   └── definitions.rs   # Property definitions
+│   │   ├── tests/
+│   │   │   ├── parser_tests.rs  # Integration tests
+│   │   │   └── data/            # Test .SOL files
+│   │   └── examples/
+│   │       └── parse_sol.rs     # Usage example
+│   │
+│   └── soil-query-parser/       # Data parser 
 │       ├── src/
-│       │   ├── lib.rs           # Public API
-│       │   ├── types.rs         # Data structures
-│       │   ├── parser.rs        # .SOL parser & serializer
-│       │   ├── error.rs         # Error types
-│       │   └── definitions.rs   # Property definitions
-│       ├── tests/
-│       │   ├── parser_tests.rs  # Integration tests
-│       │   └── data/            # Test .SOL files
+│       │   ├── main.rs          # CLI application
+│       │   ├── db.rs            # Database operations
+│       │   ├── validation.rs    # Profile validation
+│       │   └── report.rs        # Statistics generation
 │       └── examples/
-│           └── parse_sol.rs     # Usage example
+│           ├── inspect_files.rs # Inspect .SOL files
+│           └── show_ids.rs      # Show profile IDs
+├── test_data/                   # 10 test .SOL files
+├── output/                      # Generated databases
+│   ├── soil_data.db             # Production database (4.1 GB)
+│   ├── test.db                  # Test database
+│   └── full_parse_report.json   # Statistics report
 └── README.md
 ```
 
 ## Features
+
+### Production Database
+
+**Coverage:**
+- **225 countries** worldwide
+- **1,984,797 soil profiles**
+- **~10 km resolution** (5 arc-minute)
+- **6 standard depths**: 5, 15, 30, 60, 100, 200 cm
+
+**Top Countries:**
+| Country | Profiles | % of Total |
+|---------|----------|------------|
+| Russia | 421,983 | 21.3% |
+| Canada | 244,237 | 12.3% |
+| USA | 161,724 | 8.1% |
+| China | 120,107 | 6.1% |
+| Brazil | 102,731 | 5.2% |
+| Australia | 102,180 | 5.1% |
+
+**Database Schema:**
+```sql
+-- Main table with profile data
+CREATE TABLE soil_profiles (
+    rowid INTEGER PRIMARY KEY AUTOINCREMENT,
+    id TEXT NOT NULL UNIQUE,
+    country_code TEXT NOT NULL,
+    lat REAL NOT NULL,
+    lon REAL NOT NULL,
+    ...
+);
+
+-- Spatial index for fast coordinate queries
+CREATE VIRTUAL TABLE soil_spatial_idx USING rtree(
+    rowid,
+    min_lat, max_lat,
+    min_lon, max_lon
+);
+```
 
 ### Data Structure
 
@@ -109,6 +198,9 @@ Each layer includes ~17 properties:
 # Run all tests
 cargo test --all
 
+# Run parser tests
+cargo test --package soil-query-parser
+
 # Run with output
 cargo test -- --nocapture
 
@@ -118,9 +210,23 @@ cargo test test_parse_single_profile_gi
 # Check code quality
 cargo clippy --all-targets --all-features
 
+# Test with small dataset
+cargo run --bin soil-query-parser -- \
+    --input ./test_data \
+    --output ./output/test.db \
+    --verbose
+
 # View documentation
 cargo doc --open
 ```
+
+### Performance Benchmarks
+
+| Dataset | Files | Profiles | Time | Speed |
+|---------|-------|----------|------|-------|
+| Test | 10 | 161,746 | 32.75s | 4,939/s |
+| Production | 225 | 1,984,797 | 583.90s | 3,399/s |
+
 
 ### Test Coverage
 TODO
