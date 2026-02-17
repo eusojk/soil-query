@@ -7,6 +7,21 @@ Query soil profiles for 225 countries at 10km resolution. Built for the DSSAT cr
 
 ## Quick Start
 
+### Use the API
+```bash
+# Start the API server
+cargo run --release --bin soil-query-api
+
+# Query soil data for any location
+curl "http://127.0.0.1:3000/soil?lat=42.7&lon=-84.5&format=json"
+
+# Get .SOL format output
+curl "http://127.0.0.1:3000/soil?lat=42.7&lon=-84.5&format=sol"
+
+# Check server health
+curl http://127.0.0.1:3000/health
+```
+
 ### As a Library
 ```rust
 use soil_query::SoilProfile;
@@ -104,11 +119,67 @@ First Layer (depth=5 cm):
   ...
 ```
 
+
+## API Endpoints
+
+### GET /health
+
+Check server status and profile count.
+```bash
+curl http://127.0.0.1:3000/health
+```
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "version": "0.1.0",
+  "profiles": 1984797
+}
+```
+
+### GET /soil
+
+Query soil data by coordinates.
+
+**Parameters:**
+- `lat` (required): Latitude (-90 to 90)
+- `lon` (required): Longitude (-180 to 180)  
+- `format` (optional): "json" (default) or "sol"
+
+**Example:**
+```bash
+curl "http://127.0.0.1:3000/soil?lat=42.7&lon=-84.5&format=json"
+```
+
+**Response:**
+```json
+{
+  "profile": {
+    "id": "US02450585",
+    "location": {"lat": 42.708, "lon": -84.542, "country_code": "US"},
+    "site": {"texture": "Loam", "max_depth_cm": 200},
+    "layers": [...]
+  },
+  "distance_km": 3.545
+}
+```
+
+### GET /definitions
+
+Get property definitions for soil abbreviations.
+```bash
+curl http://127.0.0.1:3000/definitions
+```
+
+
+
+
 ## Project Structure
 ```
 soil-query/
 ├── crates/
-│   ├── soil-query/              # Core library 
+│   ├── soil-query/              # Core library
 │   │   ├── src/
 │   │   │   ├── lib.rs           # Public API
 │   │   │   ├── types.rs         # Data structures
@@ -121,20 +192,30 @@ soil-query/
 │   │   └── examples/
 │   │       └── parse_sol.rs     # Usage example
 │   │
-│   └── soil-query-parser/       # Data parser 
+│   ├── soil-query-parser/       # Data parser
+│   │   ├── src/
+│   │   │   ├── main.rs          # CLI application
+│   │   │   ├── db.rs            # Database operations
+│   │   │   ├── validation.rs    # Profile validation
+│   │   │   └── report.rs        # Statistics generation
+│   │   └── examples/
+│   │       ├── inspect_files.rs # Inspect .SOL files
+│   │       └── show_ids.rs      # Show profile IDs
+│   │
+│   └── soil-query-api/          # REST API
 │       ├── src/
-│       │   ├── main.rs          # CLI application
-│       │   ├── db.rs            # Database operations
-│       │   ├── validation.rs    # Profile validation
-│       │   └── report.rs        # Statistics generation
-│       └── examples/
-│           ├── inspect_files.rs # Inspect .SOL files
-│           └── show_ids.rs      # Show profile IDs
+│       │   ├── main.rs          # Server entry point
+│       │   ├── db.rs            # Database queries
+│       │   ├── handlers.rs      # Request handlers
+│       │   └── models.rs        # API types
+│       └── README.md            # API documentation
+│
 ├── test_data/                   # 10 test .SOL files
-├── output/                      # Generated databases
+├── output/                      # Generated files
 │   ├── soil_data.db             # Production database (4.1 GB)
 │   ├── test.db                  # Test database
-│   └── full_parse_report.json   # Statistics report
+│   ├── full_parse_report.json   # Parse statistics
+│   └── DATABASE_INFO.md         # Database documentation
 └── README.md
 ```
 
