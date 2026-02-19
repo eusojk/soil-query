@@ -1,0 +1,19 @@
+[package]
+name = "soil-query-cli"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "soil-query"
+path = "src/main.rs"
+
+[dependencies]
+soil-query.workspace = true
+rusqlite.workspace = true
+anyhow.workspace = true
+clap.workspace = true
+serde_json.workspace = true
+colored = "2.1"

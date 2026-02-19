@@ -1,6 +1,9 @@
 [workspace]
 members = [
-    "crates/soil-query", "crates/soil-query-api", "crates/soil-query-parser",
+    "crates/soil-query", 
+    "crates/soil-query-api", 
+    "crates/soil-query-cli",
+    "crates/soil-query-parser",
 ]
 resolver = "2"
 
@@ -27,3 +30,4 @@ tower = "0.4"
 tower-http = { version = "0.5", features = ["cors", "trace"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+colored = "2.1"

@@ -26,3 +26,6 @@ _tmp/
 CHANGELOG.md
 
 test_data/
+
+*.SOL
+!test_data/*.SOL
