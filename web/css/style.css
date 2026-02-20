@@ -59,6 +59,89 @@ input[type="number"] {
     animation: pulse 2s infinite;
 }
 
+/* Flexbox utilities for map controls */
+.flex {
+    display: flex;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem;
+}
+
+.pb-2 {
+    padding-bottom: 0.5rem;
+}
+
+.border-b {
+    border-bottom-width: 1px;
+}
+
+.border-gray-200 {
+    border-color: #e5e7eb;
+}
+
+/* Custom map controls */
+.maplibregl-ctrl select,
+.maplibregl-ctrl button {
+    background: white;
+    border: none;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.1);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.maplibregl-ctrl select:hover,
+.maplibregl-ctrl button:hover {
+    background: #f8f9fa;
+}
+
+.maplibregl-ctrl select:focus,
+.maplibregl-ctrl button:focus {
+    outline: 2px solid #3B82F6;
+    outline-offset: 2px;
+}
+
+/* Popup styling */
+.maplibregl-popup-content {
+    padding: 8px 12px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.maplibregl-popup-close-button {
+    font-size: 18px;
+    padding: 0 6px;
+}
+
+/* Make controls more visible */
+.maplibregl-ctrl-group button {
+    width: 30px;
+    height: 30px;
+}
+
+/* Button hover effects */
+button {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
     #sidebar {
@@ -67,9 +150,27 @@ input[type="number"] {
         width: 100%;
         max-height: 50vh;
         bottom: 0;
+        right: 0;
+        border-left: none;
+        border-top: 1px solid #e5e7eb;
     }
     
     .flex {
         flex-direction: column;
+    }
+    
+    /* Move map hint on mobile */
+    .absolute.top-4.left-4 {
+        top: 60px;
+        left: 10px;
+        font-size: 0.75rem;
+        padding: 0.5rem;
+    }
+}
+
+/* Ensure sidebar is on the right on desktop */
+@media (min-width: 769px) {
+    #sidebar {
+        order: 2;
     }
 }

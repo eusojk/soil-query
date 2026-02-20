@@ -6,8 +6,8 @@
     <title>Soil Query - Global Soil Data Explorer</title>
     
     <!-- MapLibre GL JS -->
-    <link href="https://unpkg.com/maplibre-gl@4.0.0/dist/maplibre-gl.css" rel="stylesheet">
-    <script src="https://unpkg.com/maplibre-gl@4.0.0/dist/maplibre-gl.js"></script>
+<link href="https://unpkg.com/maplibre-gl@5.18.0/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@5.18.0/dist/maplibre-gl.js"></script>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -43,8 +43,18 @@
 
     <!-- Main Content -->
     <div class="flex h-[calc(100vh-80px)]">
-        <!-- Sidebar -->
-        <aside id="sidebar" class="w-96 bg-white shadow-lg overflow-y-auto border-r border-gray-200">
+        <!-- Map Container -->
+        <main class="flex-1 relative">
+            <div id="map" class="w-full h-full"></div>
+            
+            <!-- Map Controls Info - Moved to top-left -->
+            <div class="absolute top-4 left-4 bg-white px-4 py-2 rounded-md shadow-lg text-sm text-gray-700">
+                💡 Click anywhere on the map to query soil data
+            </div>
+        </main>
+
+        <!-- Sidebar - Moved to right -->
+        <aside id="sidebar" class="w-96 bg-white shadow-lg overflow-y-auto border-l border-gray-200">
             <div class="p-6">
                 <!-- Instructions -->
                 <div id="instructions" class="mb-6">
@@ -87,7 +97,7 @@
                     
                     <div class="mt-4 p-3 bg-blue-50 rounded-md">
                         <p class="text-xs text-blue-800">
-                            💡 <strong>Tip:</strong> Click directly on the map for fastest results
+                            💡 <strong>Tip:</strong> Use Globe mode to rotate the Earth
                         </p>
                     </div>
                 </div>
@@ -184,16 +194,6 @@
                 </div>
             </div>
         </aside>
-
-        <!-- Map Container -->
-        <main class="flex-1 relative">
-            <div id="map" class="w-full h-full"></div>
-            
-            <!-- Map Controls Info -->
-            <div class="absolute bottom-4 left-4 bg-white px-4 py-2 rounded-md shadow-lg text-sm text-gray-700">
-                Click anywhere on the map to query soil data
-            </div>
-        </main>
     </div>
 
     <!-- Scripts -->
