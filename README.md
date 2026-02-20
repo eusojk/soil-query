@@ -285,6 +285,13 @@ Database Statistics
   Database Size: 4102.95 MB
 ```
 
+### Known Limitations
+
+1. **Database required**: Must have `soil_data.db` created or downloaded
+2. **No caching**: Each query hits the database
+3. **Limited definitions**: Only 9 properties included at the moment (expansion is a TODO item)
+4. **No batch queries**: One location at a time (by design for simplicity)
+
 
 ## Project Structure
 ```
