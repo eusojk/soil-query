@@ -172,7 +172,118 @@ Get property definitions for soil abbreviations.
 curl http://127.0.0.1:3000/definitions
 ```
 
+## CLI Tool
 
+### Installation
+```bash
+# Build from source
+cargo build --release --bin soil-query
+
+# The binary is at: target/release/soil-query (or .exe on Windows)
+```
+
+### Quick Start
+```bash
+# Find soil data for any location
+soil-query find --lat=42.7 --lon=-84.5
+
+# Get JSON output
+soil-query find --lat=42.7 --lon=-84.5 --format=json
+
+# Save as .SOL file
+soil-query find --lat=42.7 --lon=-84.5 --format=sol --output=soil.SOL
+
+# List property definitions
+soil-query definitions
+
+# Explain a property
+soil-query explain SLLL
+
+# Show database statistics
+soil-query stats
+```
+
+### CLI Commands
+
+#### find - Query Soil Data
+
+Find the nearest soil profile for any coordinates.
+```bash
+soil-query find --lat=<latitude> --lon=<longitude> [OPTIONS]
+```
+
+**Options:**
+- `--lat, -l`: Latitude (-90 to 90)
+- `--lon, -n`: Longitude (-180 to 180)
+- `--format, -f`: Output format (summary/json/sol)
+- `--output, -o`: Save to file
+
+**Example output:**
+```
+→ Searching for soil data...
+  Location: 42.700°, -84.500°
+✓ Found profile!
+  ID: US02450585
+  Distance: 3.55 km
+
+Profile Summary
+
+  ID: US02450585
+  Country: US
+  Location: 42.708°, -84.542°
+  Texture: Loam
+  Max Depth: 200 cm
+
+Soil Layers
+
+  Depth    Texture  WP       FC       SAT      pH
+  5        A        0.101    0.227    0.389    6.250
+  15       A        0.112    0.237    0.391    6.320
+  ...
+```
+
+#### definitions - List Properties
+
+List all soil property abbreviations with descriptions.
+```bash
+soil-query definitions
+```
+
+#### explain - Property Details
+
+Get detailed explanation for a specific property.
+```bash
+soil-query explain <ABBREVIATION>
+```
+
+**Examples:**
+```bash
+soil-query explain SLLL    # Wilting point
+soil-query explain SBDM    # Bulk density  
+soil-query explain SLHW    # pH in water
+```
+
+#### stats - Database Statistics
+
+Show database statistics and top countries.
+```bash
+soil-query stats
+```
+
+**Output:**
+```
+Database Statistics
+
+  Total Profiles: 1984797
+
+  Top 10 Countries:
+    RU 421983 profiles (21.3%)
+    CA 244237 profiles (12.3%)
+    US 161724 profiles (8.1%)
+    ...
+
+  Database Size: 4102.95 MB
+```
 
 
 ## Project Structure
@@ -202,13 +313,18 @@ soil-query/
 │   │       ├── inspect_files.rs # Inspect .SOL files
 │   │       └── show_ids.rs      # Show profile IDs
 │   │
-│   └── soil-query-api/          # REST API
+│   ├── soil-query-api/          # REST API
+│   │   ├── src/
+│   │   │   ├── main.rs          # Server entry point
+│   │   │   ├── db.rs            # Database queries
+│   │   │   ├── handlers.rs      # Request handlers
+│   │   │   └── models.rs        # API types
+│   │   └── README.md            # API documentation
+│   │
+│   └── soil-query-cli/          # CLI tool
 │       ├── src/
-│       │   ├── main.rs          # Server entry point
-│       │   ├── db.rs            # Database queries
-│       │   ├── handlers.rs      # Request handlers
-│       │   └── models.rs        # API types
-│       └── README.md            # API documentation
+│       │   └── main.rs          # CLI application
+│       └── README.md            # CLI documentation
 │
 ├── test_data/                   # 10 test .SOL files
 ├── output/                      # Generated files
