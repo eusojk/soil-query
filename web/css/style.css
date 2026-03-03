@@ -6,69 +6,17 @@
     top: 0;
     bottom: 0;
     width: 100%;
-    background: #0a0e27;
+    background: #1a1a2e;
 }
 
-/* Space background with stars */
 body {
-    background: #0a0e27;
+    background: #1a1a2e;
     overflow: hidden;
 }
 
-#map {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-}
-
-/* Animated stars background */
-#map::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        radial-gradient(2px 2px at 20px 30px, white, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 60px 70px, white, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 50px 50px, white, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 130px 80px, white, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 90px 10px, white, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 10px 90px, white, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 160px 20px, white, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 40px 120px, white, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 180px 60px, white, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 30px 150px, white, rgba(0,0,0,0));
-    background-repeat: repeat;
-    background-size: 200px 200px;
-    animation: stars 200s linear infinite;
-    opacity: 0.4;
-    pointer-events: none;
-    z-index: 0;
-}
-
-@keyframes stars {
-    from {
-        transform: translateY(0px);
-    }
-    to {
-        transform: translateY(-2000px);
-    }
-}
-
-/* Ensure map canvas is above the stars */
-.maplibregl-canvas-container,
-.maplibregl-canvas {
-    position: relative;
-    z-index: 1;
-}
-
-/* Smooth transitions */
-* {
-    transition: all 0.2s ease;
+/* Smooth transitions - scoped to UI elements only, not map internals */
+button, a, input, .sidebar, #sidebar {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* Custom scrollbar for sidebar */

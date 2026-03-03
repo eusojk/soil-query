@@ -2,6 +2,7 @@
 
 let map;
 let currentMarker = null;
+let currentPopup = null;
 
 // Available base map styles
 const BASE_MAPS = {
@@ -250,13 +251,18 @@ function switchBaseMap(mapType) {
         map.setCenter(currentCenter);
         map.setZoom(currentZoom);
         
-        // Re-add marker if exists
+        // Re-add marker if exists (preserve popup if it was attached)
         if (currentMarker) {
             const lngLat = currentMarker.getLngLat();
+            const hadPopup = currentMarker.getPopup();
+            const popup = hadPopup ? currentMarker.getPopup() : null;
             currentMarker.remove();
             currentMarker = new maplibregl.Marker({ color: '#10B981' })
                 .setLngLat(lngLat)
                 .addTo(map);
+            if (popup) {
+                currentMarker.setPopup(popup);
+            }
         }
     });
 }
@@ -315,27 +321,34 @@ function flyToLocation(lat, lon) {
  * @param {string} profileId - Profile ID
  */
 function addResultMarker(lat, lon, profileId) {
-    // Remove existing marker
+    // Remove existing marker and popup
     if (currentMarker) {
         currentMarker.remove();
+        currentMarker = null;
+    }
+    if (currentPopup) {
+        currentPopup.remove();
+        currentPopup = null;
     }
 
-    // Create popup
-    const popup = new maplibregl.Popup({ offset: 25 }).setHTML(
-        `<div class="text-sm p-1">
-            <p class="font-semibold">${profileId}</p>
-            <p class="text-gray-600">${lat.toFixed(3)}°, ${lon.toFixed(3)}°</p>
-        </div>`
-    );
-
-    // Create marker with popup
-    currentMarker = new maplibregl.Marker({
-        color: '#10B981'
-    })
+    // Add green marker at result location
+    currentMarker = new maplibregl.Marker({ color: '#10B981' })
         .setLngLat([lon, lat])
-        .setPopup(popup)
         .addTo(map);
 
-    // Show popup
-    currentMarker.togglePopup();
+    // Add popup directly to map (most reliable approach)
+    currentPopup = new maplibregl.Popup({
+        offset: 25,
+        closeButton: true,
+        closeOnClick: false,
+        anchor: 'bottom'
+    })
+        .setLngLat([lon, lat])
+        .setHTML(
+            `<div style="font-size:13px; padding:4px 2px; line-height:1.4;">
+                <p style="font-weight:600; margin:0 0 2px 0;">${profileId}</p>
+                <p style="color:#555; margin:0;">${lat.toFixed(3)}°, ${lon.toFixed(3)}°</p>
+            </div>`
+        )
+        .addTo(map);
 }

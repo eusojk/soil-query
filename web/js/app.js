@@ -49,6 +49,9 @@ function setupEventListeners() {
 
     // New search button
     document.getElementById('new-search').addEventListener('click', resetToInstructions);
+
+    // Setup address search
+    setupAddressSearch();
 }
 
 /**
@@ -74,9 +77,8 @@ function handleSearchButton() {
         return;
     }
 
-    // Search and fly to location
+    // Search (flyToLocation is called inside searchSoilData after API responds)
     searchSoilData(lat, lon);
-    flyToLocation(lat, lon);
     addMarker(lat, lon);
 }
 
@@ -99,15 +101,13 @@ async function searchSoilData(lat, lon) {
         // Store data
         currentProfileData = data;
 
-        // Display results
+        // Display results in sidebar
         displayResults(data);
 
-        // Add result marker
-        addResultMarker(
-            data.profile.location.lat,
-            data.profile.location.lon,
-            data.profile.id
-        );
+        // Add marker and popup (simple delay to let any map movement settle)
+        const profileLat = data.profile.location.lat;
+        const profileLon = data.profile.location.lon;
+        addResultMarker(profileLat, profileLon, data.profile.id);
 
     } catch (error) {
         showError(error.message);
@@ -242,10 +242,14 @@ function resetToInstructions() {
     document.getElementById('lat-input').value = '';
     document.getElementById('lon-input').value = '';
     
-    // Remove marker
+    // Remove marker and popup
     if (currentMarker) {
         currentMarker.remove();
         currentMarker = null;
+    }
+    if (typeof currentPopup !== 'undefined' && currentPopup) {
+        currentPopup.remove();
+        currentPopup = null;
     }
     
     // Reset map view
