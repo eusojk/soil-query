@@ -29,6 +29,20 @@ document.addEventListener('DOMContentLoaded', async () => {
  * Setup all event listeners
  */
 function setupEventListeners() {
+    // Home button
+    document.getElementById('home-btn').addEventListener('click', resetToInstructions);
+
+    // Info modal
+    document.getElementById('info-btn').addEventListener('click', () => {
+        document.getElementById('info-modal').classList.remove('hidden');
+    });
+    document.getElementById('modal-close').addEventListener('click', () => {
+        document.getElementById('info-modal').classList.add('hidden');
+    });
+    document.getElementById('modal-backdrop').addEventListener('click', () => {
+        document.getElementById('info-modal').classList.add('hidden');
+    });
+
     // Search button
     document.getElementById('search-btn').addEventListener('click', handleSearchButton);
 

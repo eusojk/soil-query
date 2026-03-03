@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soil Query - Global Soil Data Explorer</title>
+    <title>Global Soil Profile Explorer</title>
     
     <!-- MapLibre GL JS -->
 <link href="https://unpkg.com/maplibre-gl@5.18.0/dist/maplibre-gl.css" rel="stylesheet">
@@ -18,31 +18,140 @@
 <body class="bg-gray-50">
     <!-- Header -->
     <header class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-full px-6 py-4">
+        <div class="max-w-full px-4 py-3">
             <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <span class="text-3xl">🌍</span>
-                    <div>
-                        <h1 class="text-2xl font-bold text-gray-900">Soil Query</h1>
-                        <p class="text-sm text-gray-600">Global Soil Data Explorer</p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <a href="https://github.com/eusojk/soil-query" target="_blank" 
-                       class="text-gray-600 hover:text-gray-900 transition">
-                        GitHub
-                    </a>
-                    <a href="http://127.0.0.1:3000" target="_blank" 
-                       class="text-gray-600 hover:text-gray-900 transition">
-                        API
-                    </a>
-                </div>
+                <!-- Left: Home button -->
+                <button id="home-btn" title="Reset to home"
+                        class="p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7m-9 5v6h4v-6m-4 0H9m6 0h-2"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6"/>
+                    </svg>
+                </button>
+
+                <!-- Center: App name -->
+                <h1 class="text-xl font-black tracking-wide select-none">
+                    <span style="color: #4a7c59;">Global Soil Profile</span><span style="color: #8B4513;"> Explorer</span>
+                </h1>
+
+                <!-- Right: Info button -->
+                <button id="info-btn" title="About this app"
+                        class="p-2 rounded-full border-2 border-gray-400 text-gray-500 hover:border-gray-700 hover:text-gray-900 transition w-8 h-8 flex items-center justify-center font-semibold text-sm">
+                    i
+                </button>
             </div>
         </div>
     </header>
 
+    <!-- Info Modal -->
+    <div id="info-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+        <!-- Backdrop -->
+        <div id="modal-backdrop" class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <!-- Modal card -->
+        <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4 max-h-[85vh] flex flex-col">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-black tracking-wide">
+                    <span style="color: #4a7c59;">Global Soil Profile</span><span style="color: #8B4513;"> Explorer</span>
+                </h2>
+                <button id="modal-close" class="text-gray-400 hover:text-gray-700 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <!-- Modal body (scrollable) -->
+            <div class="overflow-y-auto px-6 py-4 text-sm text-gray-700 space-y-5">
+
+                <p>A web interface for exploring the <strong>Global High-Resolution Soil Profile Database</strong> — providing DSSAT-compatible soil profiles for crop simulation modeling across 225 countries.</p>
+
+                <!-- How to use -->
+                <div>
+                    <h3 class="font-bold text-gray-900 mb-2">How to Use</h3>
+                    <ul class="space-y-1 list-disc list-inside text-gray-600">
+                        <li>Click anywhere on the map to query soil data at that location</li>
+                        <li>Or search by address / coordinates in the right panel</li>
+                        <li>Download results as a <code class="bg-gray-100 px-1 rounded">.SOL</code> file (DSSAT-ready) or JSON</li>
+                        <li>Toggle between Globe and Mercator projections using the map controls</li>
+                    </ul>
+                </div>
+
+                <!-- SECTION: Original Dataset -->
+                <div class="border-t border-gray-200 pt-4">
+                    <h2 class="text-sm font-black uppercase tracking-widest mb-4" style="color: #4a7c59;">Original Dataset</h2>
+
+                    <!-- Dataset -->
+                    <div class="mb-4">
+                        <h3 class="font-bold text-gray-900 mb-2">Global High-Resolution Soil Profile Database for Crop Modeling Applications</h3>
+                        <div class="bg-gray-50 rounded-lg p-3 space-y-1 text-xs">
+                            <div class="flex gap-2"><span class="text-gray-500 w-24 shrink-0">Coverage</span><span>225 countries · ~2 million profiles</span></div>
+                            <div class="flex gap-2"><span class="text-gray-500 w-24 shrink-0">Resolution</span><span>5 arc-minutes (~10 km grid)</span></div>
+                            <div class="flex gap-2"><span class="text-gray-500 w-24 shrink-0">Layers</span><span>6 layers: 5, 15, 30, 60, 100, 200 cm depth</span></div>
+                            <div class="flex gap-2"><span class="text-gray-500 w-24 shrink-0">Format</span><span>DSSAT *.SOL (v4.51)</span></div>
+                            <div class="flex gap-2"><span class="text-gray-500 w-24 shrink-0">Published</span><span>2015 · Harvard Dataverse, V2</span></div>
+                            <div class="flex gap-2"><span class="text-gray-500 w-24 shrink-0">DOI</span>
+                                <a href="https://doi.org/10.7910/DVN/1PEEY0" target="_blank" class="text-blue-600 hover:underline">10.7910/DVN/1PEEY0</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Sources -->
+                    <div class="mb-4">
+                        <h3 class="font-bold text-gray-900 mb-2">Data Sources</h3>
+                        <p class="text-gray-600 text-xs leading-relaxed">
+                            Soil properties (bulk density, organic carbon, clay, silt, pH, CEC) are derived from
+                            <strong>SoilGrids 1km</strong> (ISRIC, 2014) and <strong>ISRIC-AfSIS</strong>.
+                            Hydraulic properties (field capacity, wilting point, saturated conductivity) are estimated
+                            using the Saxton &amp; Rawls (2006) pedotransfer function.
+                            Additional parameters use the <strong>HarvestChoice HC27</strong> reference database.
+                        </p>
+                    </div>
+
+                    <!-- Authors -->
+                    <div>
+                        <h3 class="font-bold text-gray-900 mb-2">Authors &amp; Institutions</h3>
+                        <ul class="text-xs text-gray-600 space-y-1 list-disc list-inside">
+                            <li>Eunjin Han — International Research Institute (IRI/Columbia University)</li>
+                            <li>Amor Ines — Michigan State University (MSU)</li>
+                            <li>Jawoo Koo — HarvestChoice/IFPRI</li>
+                        </ul>
+                        <p class="text-xs text-gray-500 mt-2">Funded by USAID Bureau of Food Security and CGIAR-PIM.</p>
+                    </div>
+                </div>
+
+                <!-- SECTION: This Project -->
+                <div class="border-t border-gray-200 pt-4">
+                    <h2 class="text-sm font-black uppercase tracking-widest mb-4" style="color: #8B4513;">This Project</h2>
+
+                    <!-- API -->
+                    <div class="mb-4">
+                        <h3 class="font-bold text-gray-900 mb-2">API</h3>
+                        <p class="text-xs text-gray-600 mb-1">Query soil data programmatically:</p>
+                        <code class="block bg-gray-100 rounded p-2 text-xs text-gray-800 break-all">GET /soil?lat=42.7&amp;lon=-84.5&amp;format=json</code>
+                        <a href="http://127.0.0.1:3000/health" target="_blank" class="inline-block mt-2 text-xs text-blue-600 hover:underline">
+                            → API Health Check
+                        </a>
+                    </div>
+
+                    <!-- GitHub -->
+                    <div>
+                        <h3 class="font-bold text-gray-900 mb-2">Source Code</h3>
+                        <a href="https://github.com/eusojk/soil-query" target="_blank"
+                           class="inline-flex items-center gap-2 text-xs text-blue-600 hover:underline">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                            </svg>
+                            github.com/eusojk/soil-query
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <!-- Main Content -->
-    <div class="flex h-[calc(100vh-80px)]">
+    <div class="flex h-[calc(100vh-57px)]">
         <!-- Map Container -->
         <main class="flex-1 relative">
             <div id="map" class="w-full h-full"></div>
