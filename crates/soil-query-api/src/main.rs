@@ -52,19 +52,25 @@ async fn main() -> anyhow::Result<()> {
 
     tracing::info!("Loading database from: {:?}", db_path);
 
-    // Initialize database (load into memory)
+    // Initialize database (disk-based SQLite)
     let db_state = init_database(&db_path).await?;
     
     tracing::info!(
-        "Database loaded: {} profiles",
+        "Database opened: {} profiles",
         db_state.profile_count
     );
 
     // Build application
     let app = build_router(db_state);
 
-    // Run server
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    // Read port from environment (Railway injects PORT automatically)
+    let port: u16 = std::env::var("PORT")
+        .unwrap_or_else(|_| "3000".to_string())
+        .parse()
+        .unwrap_or(3000);
+
+    // Bind to 0.0.0.0 so Railway can route external traffic
+    let addr = SocketAddr::from(([0, 0, 0, 0], port));
     tracing::info!("Listening on {}", addr);
 
     let listener = tokio::net::TcpListener::bind(addr).await?;
@@ -72,4 +78,3 @@ async fn main() -> anyhow::Result<()> {
 
     Ok(())
 }
-
