@@ -15,8 +15,9 @@ pub async fn root() -> &'static str {
 
 /// Health check endpoint
 pub async fn health(State(state): State<DbState>) -> Json<HealthResponse> {
+    let status = if state.is_ready() { "ok" } else { "degraded - database not loaded" };
     Json(HealthResponse {
-        status: "ok".to_string(),
+        status: status.to_string(),
         version: env!("CARGO_PKG_VERSION").to_string(),
         profiles: state.profile_count,
     })
@@ -27,6 +28,11 @@ pub async fn get_soil(
     State(state): State<DbState>,
     Query(params): Query<SoilQuery>,
 ) -> Result<Response, AppError> {
+    // Check database is ready
+    let connection = state.connection.ok_or_else(|| AppError::DatabaseError {
+        message: "Database not loaded yet. Please try again shortly.".to_string(),
+    })?;
+
     // Validate coordinates
     if !(-90.0..=90.0).contains(&params.lat) {
         return Err(AppError::InvalidCoordinate {
@@ -40,7 +46,7 @@ pub async fn get_soil(
     }
 
     // Lock the database connection
-    let conn = state.connection.lock()
+    let conn = connection.lock()
         .map_err(|_| AppError::DatabaseError {
             message: "Failed to acquire database lock".to_string(),
         })?;
@@ -61,7 +67,7 @@ pub async fn get_soil(
                 sol_content,
             ).into_response())
         }
-        "json" | _ => {
+        _ => {
             let response = SoilResponse {
                 profile,
                 distance_km: distance,
@@ -73,7 +79,6 @@ pub async fn get_soil(
 
 /// Get property definitions
 pub async fn get_definitions() -> Json<Vec<PropertyDefinition>> {
-    // TODO: Implement actual definitions from the definitions module
     Json(vec![
         PropertyDefinition {
             abbreviation: "SLLL".to_string(),
@@ -109,10 +114,9 @@ impl IntoResponse for AppError {
         let (status, message) = match self {
             AppError::InvalidCoordinate { message } => (StatusCode::BAD_REQUEST, message),
             AppError::NotFound { message } => (StatusCode::NOT_FOUND, message),
-            AppError::DatabaseError { message } => (StatusCode::INTERNAL_SERVER_ERROR, message),
+            AppError::DatabaseError { message } => (StatusCode::SERVICE_UNAVAILABLE, message),
         };
 
         (status, Json(serde_json::json!({ "error": message }))).into_response()
     }
 }
-

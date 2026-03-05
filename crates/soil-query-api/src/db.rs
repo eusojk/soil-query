@@ -1,4 +1,4 @@
-//! In-memory database operations
+//! Database operations
 
 use anyhow::{Context, Result};
 use rusqlite::Connection;
@@ -9,14 +9,29 @@ use std::sync::{Arc, Mutex};
 /// Database state shared across handlers
 #[derive(Clone)]
 pub struct DbState {
-    pub connection: Arc<Mutex<Connection>>,
+    pub connection: Option<Arc<Mutex<Connection>>>,
     pub profile_count: usize,
 }
 
-/// Initialize database and load into memory
+impl DbState {
+    pub fn is_ready(&self) -> bool {
+        self.connection.is_some()
+    }
+}
+
+/// Initialize database — returns Ok even if database is missing so the
+/// service stays alive on Railway and can accept SSH connections.
 pub async fn init_database(db_path: &Path) -> Result<DbState> {
     if !db_path.exists() {
-        anyhow::bail!("Database file not found: {:?}", db_path);
+        tracing::warn!(
+            "Database file not found at {:?} — starting in degraded mode. \
+             Upload soil_data.db to this path and restart.",
+            db_path
+        );
+        return Ok(DbState {
+            connection: None,
+            profile_count: 0,
+        });
     }
 
     // Open connection
@@ -31,7 +46,7 @@ pub async fn init_database(db_path: &Path) -> Result<DbState> {
     tracing::info!("Database contains {} profiles", profile_count);
 
     Ok(DbState {
-        connection: Arc::new(Mutex::new(conn)),
+        connection: Some(Arc::new(Mutex::new(conn))),
         profile_count,
     })
 }
@@ -135,4 +150,3 @@ mod tests {
         assert!(distance < 0.1);
     }
 }
-
