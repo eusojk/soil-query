@@ -103,8 +103,8 @@ function handleSearchButton() {
  */
 async function searchSoilData(lat, lon) {
     try {
-        // Show loading state
-        showLoading();
+        // Show loading state with coordinates
+        showLoading(lat, lon);
 
         // Store query coordinates
         currentQueryCoords = { lat, lon };
@@ -139,8 +139,7 @@ function displayResults(data) {
     document.getElementById('profile-id').textContent = profile.id;
     document.getElementById('profile-location').textContent = 
         `${profile.location.lat.toFixed(3)}°, ${profile.location.lon.toFixed(3)}°`;
-    document.getElementById('profile-distance').textContent = 
-        `📍 ${distance_km.toFixed(2)} km from query point`;
+    document.getElementById('profile-distance').textContent = `${distance_km.toFixed(2)} km from query point`;
 
     // Update profile info
     document.getElementById('profile-country').textContent = profile.location.country_code;
@@ -208,9 +207,15 @@ function handleDownloadJSON() {
 }
 
 /**
- * Show loading state
+ * Show loading state with coordinates
  */
-function showLoading() {
+function showLoading(lat, lon) {
+    const coordEl = document.getElementById('loading-coords');
+    if (lat !== undefined && lon !== undefined) {
+        coordEl.textContent = `near ${lat.toFixed(3)}°, ${lon.toFixed(3)}°`;
+    } else {
+        coordEl.textContent = '';
+    }
     showSection('loading');
 }
 
