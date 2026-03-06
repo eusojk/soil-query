@@ -1,6 +1,6 @@
 // API communication module
 
-const API_BASE_URL = 'http://127.0.0.1:3000';
+const API_BASE_URL = 'https://soil-query-production.up.railway.app';
 
 /**
  * Query soil data by coordinates
