@@ -4,7 +4,7 @@
 
 Query soil profiles for 225 countries at 10km resolution. Built for the DSSAT crop modeling community.
 
-[**Interactive Map Explorer**](https://soilmap.josuekpodo.com) · [**API**](https://soil-query-production.up.railway.app)
+[**Interactive Map Explorer**](https://soilmap.josuekpodo.com) · [**Interactive API Docs (Swagger UI)**](https://soil-query-production.up.railway.app/swagger-ui/)
 
 ---
 
@@ -33,6 +33,7 @@ curl "https://soil-query-production.up.railway.app/soil?lat=42.7&lon=-84.5&forma
 # Health check
 curl https://soil-query-production.up.railway.app/health
 ```
+
 
 ### CLI
 
@@ -110,7 +111,10 @@ Han, Eunjin; Ines, Amor; Koo, Jawoo, 2015. "*Global High-Resolution Soil Profile
 
 ## License
 
-TODO
+Licensed under the terms of both the MIT license and the Apache License (Version 2.0).
+
+See [LICENSE-MIT](LICENSE-MIT) and [LICENSE-APACHE](LICENSE-APACHE) for details.
+
 
 ## Contributing
 

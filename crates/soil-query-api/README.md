@@ -26,11 +26,13 @@ cargo run --release --bin soil-query-api
 
 ### Production (Railway)
 
-The API is currently live at:
+The interactive API docs is currently live at:
 
 ```
-https://soil-query-production.up.railway.app
+https://soil-query-production.up.railway.app/swagger-ui/
 ```
+
+Or you can directly interact via `curl` in a terminal:
 
 ```bash
 curl "https://soil-query-production.up.railway.app/soil?lat=42.7&lon=-84.5&format=json"
