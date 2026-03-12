@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Check API health
     const apiHealthy = await checkAPIHealth();
     if (!apiHealthy) {
-        showError('API server is not running. Please start the API server at http://127.0.0.1:3000');
+        showError('Unable to reach the API server. Please try again later.');
         return;
     }
 
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         setTimeout(() => {
             document.getElementById('info-modal').classList.remove('hidden');
             localStorage.setItem('soilmap_visited', 'true');
-        }, 800); // slight delay so the map loads first
+        }, 800);
     }
 
     console.log('Application initialized');
@@ -60,6 +60,18 @@ function setupEventListeners() {
 
     // Setup address search
     setupAddressSearch();
+
+    // Modal open/close
+    const modal = document.getElementById('info-modal');
+    document.getElementById('info-btn').addEventListener('click', () => {
+        modal.classList.remove('hidden');
+    });
+    document.getElementById('modal-close').addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+    document.getElementById('modal-backdrop').addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
 }
 
 /**
