@@ -97,10 +97,7 @@ function handleSearchButton() {
         return;
     }
 
-    // Search and fly to location
     searchSoilData(lat, lon);
-    flyToLocation(lat, lon);
-    addMarker(lat, lon);
 }
 
 /**
@@ -124,13 +121,6 @@ async function searchSoilData(lat, lon) {
 
         // Display results
         displayResults(data);
-
-        // Add result marker
-        addResultMarker(
-            data.profile.location.lat,
-            data.profile.location.lon,
-            data.profile.id
-        );
 
     } catch (error) {
         showError(error.message);
@@ -172,6 +162,9 @@ function displayResults(data) {
         `;
         tbody.appendChild(row);
     });
+
+    // Zoom to profile location, then place marker
+    flyToLocation(profile.location.lat, profile.location.lon);
 
     // Add result marker with popup (will open automatically)
     addResultMarker(
