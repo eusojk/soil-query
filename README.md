@@ -1,10 +1,12 @@
 # soil-query
 
-> Global soil data with DSSAT-compatible outputs
+> Query soil profiles for 225 countries at 10km resolution. Built for the DSSAT crop modeling community.
 
-Query soil profiles for 225 countries at 10km resolution. Built for the DSSAT crop modeling community.
 
-[**Interactive Map Explorer**](https://soilmap.josuekpodo.com) · [**API Docs (Swagger UI)**](https://soil-query-production.up.railway.app/swagger-ui/)
+Quick Start: [**Interactive Map Explorer**](https://soilmap.josuekpodo.com) · [**API Docs (Swagger UI)**](https://soil-query-production.up.railway.app/swagger-ui/)
+
+
+*If this project has been helpful to you, please consider giving it a star on [GitHub](https://github.com/eusojk/soil-query)!*
 
 ---
 
