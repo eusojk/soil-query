@@ -2,16 +2,31 @@
 
 Command-line tool for querying global soil data with DSSAT-compatible outputs.
 
+---
+
 ## Installation
 
+### Pre-built Binaries (Recommended)
+
+Download the latest binary for your platform from the [GitHub Releases](https://github.com/eusojk/soil-query/releases) page.
+
+| Platform | File |
+|----------|------|
+| Linux (x86_64) | `soil-query-linux-x86_64` |
+| macOS (Apple Silicon) | `soil-query-macos-aarch64` |
+| macOS (Intel) | `soil-query-macos-x86_64` |
+| Windows | `soil-query-windows-x86_64.exe` |
+
 ### From Source
+
 ```bash
 cargo build --release --bin soil-query
 ```
 
-The binary will be at `target/release/soil-query` (or `soil-query.exe` on Windows).
+Binary will be at `target/release/soil-query` (or `soil-query.exe` on Windows).
 
-### Copy to PATH (Optional)
+### Add to PATH (Optional)
+
 ```bash
 # Linux/Mac
 cp target/release/soil-query ~/.local/bin/
@@ -20,62 +35,82 @@ cp target/release/soil-query ~/.local/bin/
 Copy-Item target\release\soil-query.exe C:\Windows\System32\
 ```
 
+---
+
 ## Usage
 
 ### Find Soil Data
 
-Query soil data for any location on Earth.
 ```bash
-# Basic query (shows summary)
+# Summary output (default)
 soil-query find --lat=42.7 --lon=-84.5
 
 # JSON output
 soil-query find --lat=42.7 --lon=-84.5 --format=json
 
-# .SOL format output
+# .SOL format (DSSAT-compatible)
 soil-query find --lat=42.7 --lon=-84.5 --format=sol
 
 # Save to file
 soil-query find --lat=42.7 --lon=-84.5 --format=sol --output=soil.SOL
 ```
 
-**Note for Windows PowerShell**: Use `--lat=42.7 --lon=-84.5` format (with equals signs) to avoid issues with negative numbers.
+> **Windows PowerShell note**: Use `--lat=42.7` format (with `=`) to avoid issues with negative numbers being interpreted as flags.
 
 ### List Property Definitions
+
 ```bash
 soil-query definitions
 ```
 
-Shows all soil property abbreviations with descriptions and units.
-
 ### Explain a Property
+
 ```bash
 soil-query explain SLLL
 soil-query explain SBDM
 soil-query explain SLHW
 ```
 
-Get detailed explanation for a specific soil property.
-
 ### Database Statistics
+
 ```bash
 soil-query stats
 ```
 
-Shows total profiles, top countries, and database size.
+---
 
-## Output Formats
+## Commands
 
-### Summary (Default)
+### `find`
 
-Human-readable table format with key properties:
+Find the nearest soil profile for any coordinates.
+
+```bash
+soil-query find --lat=<LAT> --lon=<LON> [OPTIONS]
 ```
+
+**Options:**
+
+| Flag | Short | Default | Description |
+|------|-------|---------|-------------|
+| `--lat` | `-l` | required | Latitude (-90 to 90) |
+| `--lon` | `-n` | required | Longitude (-180 to 180) |
+| `--format` | `-f` | `summary` | Output format: `summary`, `json`, or `sol` |
+| `--output` | `-o` | stdout | Save to file instead of printing |
+
+**Example output (summary):**
+```
+  Searching for soil data...
+  Location: 42.700°, -84.500°
+  Found profile!
+  ID: US02450585
+  Distance: 3.55 km
+
 Profile Summary
 
   ID: US02450585
   Country: US
   Location: 42.708°, -84.542°
-  Distance: 3.55 km
   Texture: Loam
   Max Depth: 200 cm
 
@@ -87,9 +122,72 @@ Soil Layers
   ...
 ```
 
-### JSON
+---
 
-Machine-readable format with complete profile data:
+### `definitions`
+
+List all soil property abbreviations with descriptions and units.
+
+```bash
+soil-query definitions
+```
+
+---
+
+### `explain`
+
+Get a detailed explanation for a specific soil property abbreviation.
+
+```bash
+soil-query explain <ABBREVIATION>
+```
+
+**Examples:**
+```bash
+soil-query explain SLLL    # Lower limit (wilting point)
+soil-query explain SDUL    # Drained upper limit (field capacity)
+soil-query explain SBDM    # Bulk density
+soil-query explain SLHW    # pH in water
+soil-query explain SCEC    # Cation exchange capacity
+```
+
+---
+
+### `stats`
+
+Show database statistics and top countries by profile count.
+
+```bash
+soil-query stats
+```
+
+**Output:**
+```
+Database Statistics
+
+  Total Profiles: 1984797
+
+  Top 10 Countries:
+    RU  421983 profiles (21.3%)
+    CA  244237 profiles (12.3%)
+    US  161724 profiles ( 8.1%)
+    ...
+
+  Database Size: 4102.95 MB
+```
+
+---
+
+## Output Formats
+
+### `summary` (default)
+
+Human-readable table. Good for quick lookups and exploration.
+
+### `json`
+
+Machine-readable. Good for scripting and downstream processing.
+
 ```json
 {
   "id": "US02450585",
@@ -98,14 +196,15 @@ Machine-readable format with complete profile data:
     "lon": -84.542,
     "country_code": "US"
   },
-  "site": {...},
-  "layers": [...]
+  "site": { ... },
+  "layers": [ ... ]
 }
 ```
 
-### .SOL
+### `sol`
 
-DSSAT-compatible format ready for crop modeling:
+DSSAT-compatible `.SOL` format, ready to drop into a crop model.
+
 ```
 *US02450585     USA              Loam   200    ISRIC soilgrids + HC27
 @SITE        COUNTRY          LAT     LONG SCS Family
@@ -113,144 +212,75 @@ DSSAT-compatible format ready for crop modeling:
 ...
 ```
 
-## Commands
-
-### find
-
-Find soil data for coordinates.
-
-**Options:**
-- `--lat, -l` (required): Latitude in decimal degrees (-90 to 90)
-- `--lon, -n` (required): Longitude in decimal degrees (-180 to 180)
-- `--format, -f`: Output format - "summary" (default), "json", or "sol"
-- `--output, -o`: Save to file instead of stdout
-
-**Examples:**
-```bash
-# East Lansing, Michigan
-soil-query find --lat=42.7 --lon=-84.5
-
-# London, UK (JSON)
-soil-query find --lat=51.5 --lon=-0.1 --format=json
-
-# São Paulo, Brazil (save to file)
-soil-query find --lat=-23.5 --lon=-46.6 --format=sol --output=sp.SOL
-```
-
-### definitions
-
-List all soil property abbreviations with descriptions.
-```bash
-soil-query definitions
-```
-
-### explain
-
-Explain a specific property abbreviation.
-```bash
-soil-query explain <ABBREVIATION>
-```
-
-**Examples:**
-```bash
-soil-query explain SLLL    # Wilting point
-soil-query explain SDUL    # Field capacity
-soil-query explain SBDM    # Bulk density
-```
-
-### stats
-
-Show database statistics.
-```bash
-soil-query stats
-```
+---
 
 ## Global Options
 
-- `--database, -d`: Path to SQLite database (default: `output/soil_data.db`)
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--database` | `-d` | Path to SQLite database (default: `output/soil_data.db`) |
 
-**Example:**
 ```bash
 soil-query --database=/path/to/custom.db find --lat=42.7 --lon=-84.5
 ```
 
+---
+
 ## Database
 
-The CLI requires the SQLite database created by `soil-query-parser`.
+The CLI requires the SQLite database built by `soil-query-parser`. See [`crates/soil-query-parser/README.md`](../soil-query-parser/README.md) for instructions on building it.
 
-**Create database:**
+By default the CLI looks for `output/soil_data.db`. Override with `--database`.
+
+---
+
+## Example Workflows
+
+### Get soil data for your farm
 ```bash
-# Parse .SOL files into database
-cargo run --release --bin soil-query-parser -- \
-    --input /path/to/sol_files \
-    --output output/soil_data.db
-```
-
-**Database path:**
-
-By default, the CLI looks for `output/soil_data.db`. You can specify a different path with `--database`.
-
-## Data Coverage
-
-- **Countries**: 225 worldwide
-- **Profiles**: 1,984,797 soil profiles
-- **Resolution**: ~10 km (5 arc-minute)
-- **Depths**: 6 standard layers (5, 15, 30, 60, 100, 200 cm)
-- **Properties**: 17 per layer (water retention, physical, chemical)
-
-## Performance
-
-- **Query time**: < 100ms for coordinate lookup
-- **Accuracy**: < 5km to nearest profile (typically < 4km)
-- **Database size**: 4.1 GB
-
-## Examples
-
-### Workflow: Get soil data for your farm
-```bash
-# Query your location
+# Quick look
 soil-query find --lat=42.7 --lon=-84.5
 
-# Save as .SOL file for DSSAT
+# Save as .SOL for DSSAT
 soil-query find --lat=42.7 --lon=-84.5 --format=sol --output=farm_soil.SOL
 
-# Check what SLLL means
+# Understand what SLLL means
 soil-query explain SLLL
 ```
 
-### Workflow: Research project
+### Research project — multiple locations
 ```bash
-# Get data as JSON for multiple locations
-soil-query find --lat=40.7 --lon=-74.0 --format=json > nyc.json
-soil-query find --lat=34.0 --lon=-118.2 --format=json > la.json
-
-# Get database statistics
-soil-query stats
+soil-query find --lat=40.7  --lon=-74.0  --format=json > nyc.json
+soil-query find --lat=34.0  --lon=-118.2 --format=json > la.json
+soil-query find --lat=-23.5 --lon=-46.6  --format=json > sao_paulo.json
 ```
+
+---
 
 ## Troubleshooting
 
-### Database not found
+**Database not found:**
 ```
 Error: Database not found: "output/soil_data.db"
 ```
+Build or download the database first, or point to it with `--database`.
 
-**Solution**: Create the database first with `soil-query-parser`, or specify the correct path with `--database`.
-
-### No profiles found
+**No profiles found:**
 ```
 Error: No profiles found near coordinates
 ```
+The location may be in a remote or ocean area. Try nearby coordinates.
 
-**Solution**: The location might be in a remote area. Try nearby coordinates or check if the database has data for that region.
-
-### Invalid coordinates
+**Invalid coordinates:**
 ```
 Error: Invalid latitude: 95 (must be -90 to 90)
 ```
+Latitude must be -90 to 90, longitude -180 to 180.
 
-**Solution**: Check your coordinates. Latitude must be -90 to 90, longitude -180 to 180.
+---
 
-## License
+## Current/Known Limitations
 
-See main README.md
+- **Database required**: The CLI does not query the remote API — it reads a local SQLite database.
+- **No caching**: Each query hits the database directly.
+- **No batch queries**: One location at a time (by design for simplicity in v0.1.0).
