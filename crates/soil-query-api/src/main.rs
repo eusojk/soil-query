@@ -12,9 +12,47 @@ use std::net::SocketAddr;
 use std::path::PathBuf;
 use tower_http::cors::{Any, CorsLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use utoipa::OpenApi;
+use utoipa_swagger_ui::SwaggerUi;
 
 // Re-export for tests
 pub use db::{init_database, DbState};
+
+#[derive(OpenApi)]
+#[openapi(
+    paths(
+        handlers::health,
+        handlers::get_soil,
+        handlers::get_definitions,
+    ),
+    components(schemas(
+        models::HealthResponse,
+        models::SoilResponse,
+        models::PropertyDefinition,
+        models::ErrorResponse,
+        soil_query::SoilProfile,
+        soil_query::SoilLayer,
+        soil_query::Location,
+        soil_query::SiteProperties,
+        soil_query::SiteWideProperties,
+        soil_query::Metadata,
+    )),
+    info(
+        title = "soil-query API",
+        version = "0.1.0",
+        description = "Query global soil profiles for 225 countries at 10km resolution. Returns DSSAT-compatible .SOL format or JSON.",
+        contact(
+            name = "eusojk",
+            url = "https://soilmap.josuekpodo.com"
+        ),
+        license(
+            name = "MIT OR Apache-2.0",
+            url = "https://github.com/eusojk/soil-query/blob/main/LICENSE-MIT"
+        )
+
+    )
+)]
+pub struct ApiDoc;
 
 /// Build the application router
 pub fn build_router(db_state: DbState) -> Router {
@@ -25,6 +63,7 @@ pub fn build_router(db_state: DbState) -> Router {
         .allow_headers(Any);
 
     Router::new()
+        .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDoc::openapi()))
         .route("/", get(handlers::root))
         .route("/health", get(handlers::health))
         .route("/soil", get(handlers::get_soil))

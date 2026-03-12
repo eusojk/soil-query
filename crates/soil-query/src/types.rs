@@ -1,11 +1,12 @@
 //! Core data types for soil profiles
 
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
 /// Geographic location of a soil profile
 ///
 /// Contains WGS84 coordinates and ISO country code.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, ToSchema)]
 pub struct Location {
     /// Latitude in decimal degrees (-90 to 90)
     pub lat: f64,
@@ -16,7 +17,7 @@ pub struct Location {
 }
 
 /// Site-level properties from @SITE section
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, ToSchema)]
 pub struct SiteProperties {
     /// ISO 3166-1 alpha-3 country code (3 letters, from header line)
     pub country_code_alpha3: String,
@@ -29,7 +30,7 @@ pub struct SiteProperties {
 }
 
 /// Site-wide properties from @ SCOM section
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, ToSchema)]
 pub struct SiteWideProperties {
     /// Color, moist, Munsell hue
     pub scom: String,
@@ -54,7 +55,7 @@ pub struct SiteWideProperties {
 }
 
 /// Individual soil layer data from @  SLB section
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, ToSchema)]
 pub struct SoilLayer {
     /// Depth to bottom of layer, cm
     pub slb: u32,
@@ -94,7 +95,7 @@ pub struct SoilLayer {
 }
 
 /// Metadata about the soil profile
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, ToSchema)]
 pub struct Metadata {
     /// Data source description
     pub source: String,
@@ -123,7 +124,7 @@ pub struct Metadata {
 /// # Ok(())
 /// # }
 /// ```
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, ToSchema)]
 pub struct SoilProfile {
     /// Unique identifier for this profile
     pub id: String,

@@ -11,7 +11,7 @@ resolver = "2"
 version = "0.1.0"
 edition = "2024"
 authors = ["JK <jk@pm.me>"]
-license = "MIT OR Apache-2.0"
+license = "MIT"
 repository = "https://github.com/eusojk/soil-query"
 
 [workspace.dependencies]
@@ -31,3 +31,5 @@ tower-http = { version = "0.5", features = ["cors", "trace"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 colored = "2.1"
+utoipa = { version = "4", features = ["axum_extras"] }
+utoipa-swagger-ui = { version = "7", features = ["axum"] }

@@ -13,7 +13,13 @@ pub async fn root() -> &'static str {
     "soil-query API v0.1.0\n\nEndpoints:\n  GET /health\n  GET /soil?lat=<lat>&lon=<lon>&format=<json|sol>\n  GET /definitions"
 }
 
-/// Health check endpoint
+#[utoipa::path(
+    get,
+    path = "/health",
+    responses(
+        (status = 200, description = "Server is healthy", body = HealthResponse),
+    )
+)]
 pub async fn health(State(state): State<DbState>) -> Json<HealthResponse> {
     let status = if state.is_ready() { "ok" } else { "degraded - database not loaded" };
     Json(HealthResponse {
@@ -23,7 +29,17 @@ pub async fn health(State(state): State<DbState>) -> Json<HealthResponse> {
     })
 }
 
-/// Get soil data for coordinates
+#[utoipa::path(
+    get,
+    path = "/soil",
+    params(SoilQuery),
+    responses(
+        (status = 200, description = "Nearest soil profile found", body = SoilResponse),
+        (status = 400, description = "Invalid coordinates", body = ErrorResponse),
+        (status = 404, description = "No profile found near coordinates", body = ErrorResponse),
+        (status = 503, description = "Database not ready", body = ErrorResponse),
+    )
+)]
 pub async fn get_soil(
     State(state): State<DbState>,
     Query(params): Query<SoilQuery>,
@@ -77,7 +93,13 @@ pub async fn get_soil(
     }
 }
 
-/// Get property definitions
+#[utoipa::path(
+    get,
+    path = "/definitions",
+    responses(
+        (status = 200, description = "List of soil property definitions", body = Vec<PropertyDefinition>),
+    )
+)]
 pub async fn get_definitions() -> Json<Vec<PropertyDefinition>> {
     Json(vec![
         PropertyDefinition {
@@ -117,6 +139,6 @@ impl IntoResponse for AppError {
             AppError::DatabaseError { message } => (StatusCode::SERVICE_UNAVAILABLE, message),
         };
 
-        (status, Json(serde_json::json!({ "error": message }))).into_response()
+        (status, Json(ErrorResponse { error: message })).into_response()
     }
 }

@@ -1,10 +1,11 @@
 //! API request and response models
 
 use serde::{Deserialize, Serialize};
+use utoipa::{IntoParams, ToSchema};
 use soil_query::SoilProfile;
 
 /// Query parameters for soil endpoint
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, IntoParams)]
 pub struct SoilQuery {
     /// Latitude in decimal degrees
     pub lat: f64,
@@ -20,14 +21,14 @@ fn default_format() -> String {
 }
 
 /// Response for soil query (JSON format)
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct SoilResponse {
     pub profile: SoilProfile,
     pub distance_km: f64,
 }
 
 /// Health check response
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct HealthResponse {
     pub status: String,
     pub version: String,
@@ -35,10 +36,17 @@ pub struct HealthResponse {
 }
 
 /// Property definition
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct PropertyDefinition {
     pub abbreviation: String,
     pub full_name: String,
     pub unit: String,
     pub description: String,
 }
+
+/// Error response
+#[derive(Debug, Serialize, ToSchema)]
+pub struct ErrorResponse {
+    pub error: String,
+}
+
