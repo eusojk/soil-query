@@ -22,6 +22,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Setup event listeners
     setupEventListeners();
 
+    // Show About modal on first visit
+    if (!localStorage.getItem('soilmap_visited')) {
+        setTimeout(() => {
+            document.getElementById('info-modal').classList.remove('hidden');
+            localStorage.setItem('soilmap_visited', 'true');
+        }, 800); // slight delay so the map loads first
+    }
+
     console.log('Application initialized');
 });
 
@@ -29,20 +37,6 @@ document.addEventListener('DOMContentLoaded', async () => {
  * Setup all event listeners
  */
 function setupEventListeners() {
-    // Home button
-    document.getElementById('home-btn').addEventListener('click', resetToInstructions);
-
-    // Info modal
-    document.getElementById('info-btn').addEventListener('click', () => {
-        document.getElementById('info-modal').classList.remove('hidden');
-    });
-    document.getElementById('modal-close').addEventListener('click', () => {
-        document.getElementById('info-modal').classList.add('hidden');
-    });
-    document.getElementById('modal-backdrop').addEventListener('click', () => {
-        document.getElementById('info-modal').classList.add('hidden');
-    });
-
     // Search button
     document.getElementById('search-btn').addEventListener('click', handleSearchButton);
 
@@ -91,8 +85,9 @@ function handleSearchButton() {
         return;
     }
 
-    // Search (flyToLocation is called inside searchSoilData after API responds)
+    // Search and fly to location
     searchSoilData(lat, lon);
+    flyToLocation(lat, lon);
     addMarker(lat, lon);
 }
 
@@ -103,8 +98,8 @@ function handleSearchButton() {
  */
 async function searchSoilData(lat, lon) {
     try {
-        // Show loading state with coordinates
-        showLoading(lat, lon);
+        // Show loading state
+        showLoading();
 
         // Store query coordinates
         currentQueryCoords = { lat, lon };
@@ -115,13 +110,15 @@ async function searchSoilData(lat, lon) {
         // Store data
         currentProfileData = data;
 
-        // Display results in sidebar
+        // Display results
         displayResults(data);
 
-        // Add marker and popup (simple delay to let any map movement settle)
-        const profileLat = data.profile.location.lat;
-        const profileLon = data.profile.location.lon;
-        addResultMarker(profileLat, profileLon, data.profile.id);
+        // Add result marker
+        addResultMarker(
+            data.profile.location.lat,
+            data.profile.location.lon,
+            data.profile.id
+        );
 
     } catch (error) {
         showError(error.message);
@@ -139,7 +136,8 @@ function displayResults(data) {
     document.getElementById('profile-id').textContent = profile.id;
     document.getElementById('profile-location').textContent = 
         `${profile.location.lat.toFixed(3)}°, ${profile.location.lon.toFixed(3)}°`;
-    document.getElementById('profile-distance').textContent = `${distance_km.toFixed(2)} km from query point`;
+    document.getElementById('profile-distance').textContent = 
+        `📍 ${distance_km.toFixed(2)} km from query point`;
 
     // Update profile info
     document.getElementById('profile-country').textContent = profile.location.country_code;
@@ -162,6 +160,13 @@ function displayResults(data) {
         `;
         tbody.appendChild(row);
     });
+
+    // Add result marker with popup (will open automatically)
+    addResultMarker(
+        profile.location.lat,
+        profile.location.lon,
+        profile.id
+    );
 
     // Show results, hide other states
     showSection('results');
@@ -207,15 +212,9 @@ function handleDownloadJSON() {
 }
 
 /**
- * Show loading state with coordinates
+ * Show loading state
  */
-function showLoading(lat, lon) {
-    const coordEl = document.getElementById('loading-coords');
-    if (lat !== undefined && lon !== undefined) {
-        coordEl.textContent = `near ${lat.toFixed(3)}°, ${lon.toFixed(3)}°`;
-    } else {
-        coordEl.textContent = '';
-    }
+function showLoading() {
     showSection('loading');
 }
 
@@ -261,14 +260,10 @@ function resetToInstructions() {
     document.getElementById('lat-input').value = '';
     document.getElementById('lon-input').value = '';
     
-    // Remove marker and popup
+    // Remove marker
     if (currentMarker) {
         currentMarker.remove();
         currentMarker = null;
-    }
-    if (typeof currentPopup !== 'undefined' && currentPopup) {
-        currentPopup.remove();
-        currentPopup = null;
     }
     
     // Reset map view
