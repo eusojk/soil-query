@@ -10,50 +10,8 @@ Query soil profiles for 225 countries at 10km resolution. Built for the DSSAT cr
 
 ## About
 
-`soil-query` currently makes DSSAT-compatible soil data accessible without downloading a 4.5 GB dataset. It wraps 1,984,797 soil profiles from 225 countries behind a simple API, CLI, and interactive web map.
+`soil-query` currently makes DSSAT-compatible soil data accessible without downloading a 4.5 GB dataset. It wraps 1,984,797 soil profiles from 225 countries behind a simple API, CLI, and interactive web map. To get started, check out the explorer or API docs linked above.
 
-
----
-
-## Quick Start
-
-### Web Interface
-
-Click anywhere on the **[explorer map](https://soilmap.josuekpodo.com)** to get soil data for that location.
-
-### API
-
-```bash
-# JSON output
-curl "https://soil-query-production.up.railway.app/soil?lat=42.7&lon=-84.5&format=json"
-
-# .SOL format output (DSSAT-compatible)
-curl "https://soil-query-production.up.railway.app/soil?lat=42.7&lon=-84.5&format=sol"
-
-# Health check
-curl https://soil-query-production.up.railway.app/health
-```
-
-
-### CLI
-
-```bash
-# Build from source
-cargo build --release --bin soil-query
-
-# Find soil data for any location
-soil-query find --lat=42.7 --lon=-84.5
-
-# Get JSON output
-soil-query find --lat=42.7 --lon=-84.5 --format=json
-
-# Save as .SOL file
-soil-query find --lat=42.7 --lon=-84.5 --format=sol --output=soil.SOL
-```
-
-### As a Library
-
-TODO
 
 ---
 
@@ -71,7 +29,7 @@ soil-query/
 └── output/                      # Generated database and reports (gitignored)
 ```
 
-Each component has its own README:
+For more details, check out the appropriate README file:
 
 - [`crates/soil-query-parser/README.md`](crates/soil-query-parser/README.md): building the database from raw .SOL files
 - [`crates/soil-query-cli/README.md`](crates/soil-query-cli/README.md): CLI commands, installation, examples
@@ -101,7 +59,7 @@ cargo doc --open
 
 ---
 
-## Data Source
+## Data Source Citation
 
 
 Han, Eunjin; Ines, Amor; Koo, Jawoo, 2015. "*Global High-Resolution Soil Profile Database for Crop Modeling Applications.*", [http://dx.doi.org/10.7910/DVN/1PEEY0](http://dx.doi.org/10.7910/DVN/1PEEY0), Harvard Dataverse, V1. 
