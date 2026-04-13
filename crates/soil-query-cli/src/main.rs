@@ -146,7 +146,7 @@ fn cmd_find(
                 println!("{}", sol_content);
             }
         }
-        "summary" | _ => {
+         _ => {
             print_profile_summary(&profile, distance);
         }
     }

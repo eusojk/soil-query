@@ -81,6 +81,7 @@ impl ParseReport {
     }
 
     /// Record an error
+    #[allow(dead_code)]
     pub fn record_error(&mut self, file: String, profile_id: Option<String>, error: String) {
         self.summary.failed += 1;
 
