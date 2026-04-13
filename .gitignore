@@ -25,7 +25,7 @@ Thumbs.db
 _tmp/
 CHANGELOG.md
 
-test_data/
+# test_data/
 
 *.SOL
-!test_data/*.SOL
+# !test_data/*.SOL

@@ -60,7 +60,7 @@ mod tests {
 
     #[test]
     fn test_validate_valid_profile() -> Result<()> {
-        let content = std::fs::read_to_string("../../test_data/GI.SOL")?;
+        let content = std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../test_data/GI.SOL"))?;
         let profiles = SoilProfile::from_sol_format(&content)?;
         let profile = &profiles[0];
 
@@ -94,7 +94,7 @@ mod tests {
 
     #[test]
     fn test_validate_layer_depths() -> Result<()> {
-        let content = std::fs::read_to_string("../../test_data/GI.SOL")?;
+        let content = std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../test_data/GI.SOL"))?;
         let profiles = SoilProfile::from_sol_format(&content)?;
         let profile = &profiles[0];
 
