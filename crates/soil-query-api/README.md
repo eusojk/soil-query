@@ -29,13 +29,13 @@ cargo run --release --bin soil-query-api
 The interactive API docs is currently live at:
 
 ```
-https://soil-query-production.up.railway.app/swagger-ui/
+https://dsiweb.cse.msu.edu/soil-query-api/swagger-ui/
 ```
 
 Or you can directly interact via `curl` in a terminal:
 
 ```bash
-curl "https://soil-query-production.up.railway.app/soil?lat=42.7&lon=-84.5&format=json"
+curl "https://dsiweb.cse.msu.edu/soil-query-api/soil?lat=42.7&lon=-84.5&format=json"
 ```
 
 ---
@@ -47,7 +47,7 @@ curl "https://soil-query-production.up.railway.app/soil?lat=42.7&lon=-84.5&forma
 Health check returns server status and total profile count.
 
 ```bash
-curl https://soil-query-production.up.railway.app/health
+curl https://dsiweb.cse.msu.edu/soil-query-api/health
 ```
 
 **Response:**
@@ -76,7 +76,7 @@ Query soil data for any coordinates.
 
 **Example .SOL:**
 ```bash
-curl "https://soil-query-production.up.railway.app/soil?lat=42.7&lon=-84.5&format=sol"
+curl "https://dsiweb.cse.msu.edu/soil-query-api/soil?lat=42.7&lon=-84.5&format=sol"
 ```
 .SOL Response:
 ```
@@ -97,7 +97,7 @@ curl "https://soil-query-production.up.railway.app/soil?lat=42.7&lon=-84.5&forma
 
 **Example JSON:**
 ```bash
-curl "https://soil-query-production.up.railway.app/soil?lat=42.7&lon=-84.5&format=json"
+curl "https://dsiweb.cse.msu.edu/soil-query-api/soil?lat=42.7&lon=-84.5&format=json"
 ```
 
 JSON Response:
@@ -127,7 +127,7 @@ JSON Response:
 Returns definitions for all soil property abbreviations.
 
 ```bash
-curl https://soil-query-production.up.railway.app/definitions
+curl https://dsiweb.cse.msu.edu/soil-query-api/definitions
 ```
 
 **Response:**

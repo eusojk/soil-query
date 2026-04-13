@@ -34,7 +34,7 @@ By default the frontend points to the production API. To use a local API instead
 
 ```js
 // Change this:
-const API_BASE_URL = "https://soil-query-production.up.railway.app";
+const API_BASE_URL = "https://dsiweb.cse.msu.edu/soil-query-api";
 
 // To this:
 const API_BASE_URL = "http://127.0.0.1:3000";
@@ -78,7 +78,7 @@ web/
 All data comes from `soil-query-api`. The base URL is set in `web/js/api.js`:
 
 ```js
-const API_BASE_URL = "https://soil-query-production.up.railway.app";
+const API_BASE_URL = "https://dsiweb.cse.msu.edu/soil-query-api";
 ```
 
 The frontend calls:

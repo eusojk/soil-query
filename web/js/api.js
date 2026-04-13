@@ -1,6 +1,6 @@
 // API communication module
 
-const API_BASE_URL = 'https://soil-query-production.up.railway.app';
+const API_BASE_URL = 'https://dsiweb.cse.msu.edu/soil-query-api';
 
 /**
  * Query soil data by coordinates
