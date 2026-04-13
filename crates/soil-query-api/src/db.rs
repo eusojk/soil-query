@@ -35,8 +35,7 @@ pub async fn init_database(db_path: &Path) -> Result<DbState> {
     }
 
     // Open connection
-    let conn = Connection::open(db_path)
-        .context("Failed to open database")?;
+    let conn = Connection::open(db_path).context("Failed to open database")?;
 
     // Get profile count
     let profile_count: usize = conn
@@ -52,17 +51,13 @@ pub async fn init_database(db_path: &Path) -> Result<DbState> {
 }
 
 /// Find the nearest soil profile to given coordinates
-pub fn find_nearest_profile(
-    conn: &Connection,
-    lat: f64,
-    lon: f64,
-) -> Result<(SoilProfile, f64)> {
+pub fn find_nearest_profile(conn: &Connection, lat: f64, lon: f64) -> Result<(SoilProfile, f64)> {
     // Use R-tree spatial index to find candidates
     // Then calculate actual distance and find the nearest
-    
+
     // First, find profiles in a bounding box using R-tree
     let search_radius = 0.5; // degrees (~55km at equator)
-    
+
     let mut stmt = conn.prepare(
         "SELECT p.data, p.lat, p.lon
          FROM soil_profiles p
@@ -71,7 +66,7 @@ pub fn find_nearest_profile(
              WHERE min_lat >= ?1 AND max_lat <= ?2
                AND min_lon >= ?3 AND max_lon <= ?4
          )
-         LIMIT 100"
+         LIMIT 100",
     )?;
 
     let rows = stmt.query_map(
@@ -94,17 +89,17 @@ pub fn find_nearest_profile(
 
     for row in rows {
         let (data, profile_lat, profile_lon) = row?;
-        
+
         // Deserialize profile
-        let mut profile: SoilProfile = serde_json::from_str(&data)
-            .context("Failed to deserialize profile")?;
-        
+        let mut profile: SoilProfile =
+            serde_json::from_str(&data).context("Failed to deserialize profile")?;
+
         // Calculate distance
         let distance = haversine_distance(lat, lon, profile_lat, profile_lon);
-        
+
         // Update metadata with distance
         profile.metadata.distance_km = Some(distance);
-        
+
         // Check if this is closer
         match &nearest {
             None => nearest = Some((profile, distance)),

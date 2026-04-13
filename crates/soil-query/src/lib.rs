@@ -47,12 +47,11 @@
 //! # }
 //! ```
 
-pub mod types;
 pub mod definitions;
-pub mod parser;
 pub mod error;
+pub mod parser;
+pub mod types;
 
 // Re-export main types for convenience
-pub use types::{SoilProfile, Location, SiteProperties, SiteWideProperties, SoilLayer, Metadata};
-pub use error::{SoilError, Result};
-
+pub use error::{Result, SoilError};
+pub use types::{Location, Metadata, SiteProperties, SiteWideProperties, SoilLayer, SoilProfile};

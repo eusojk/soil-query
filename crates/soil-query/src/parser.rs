@@ -1,7 +1,9 @@
 //! Parser for .SOL format files
 
 use crate::error::{Result, SoilError};
-use crate::types::{Location, Metadata, SiteProperties, SiteWideProperties, SoilLayer, SoilProfile};
+use crate::types::{
+    Location, Metadata, SiteProperties, SiteWideProperties, SoilLayer, SoilProfile,
+};
 
 /// Sentinel value representing missing data in .SOL files
 const MISSING_VALUE: f64 = -99.0;
@@ -22,16 +24,12 @@ fn is_missing(value: f64) -> bool {
 
 /// Convert f64 to Option, treating -99 as None
 fn optional_f64(value: f64) -> Option<f64> {
-    if is_missing(value) {
-        None
-    } else {
-        Some(value)
-    }
+    if is_missing(value) { None } else { Some(value) }
 }
 
 impl SoilProfile {
     /// Parse a .SOL format string into a vector of SoilProfiles
-    /// 
+    ///
     /// A .SOL file may contain multiple soil profiles, each starting with a header line.
     pub fn from_sol_format(content: &str) -> Result<Vec<Self>> {
         let lines: Vec<&str> = content.lines().collect();
@@ -49,7 +47,7 @@ impl SoilProfile {
             if lines[i].starts_with('*') {
                 let profile = Self::parse_single_profile(&lines[i..])?;
                 profiles.push(profile);
-                
+
                 // Skip past this profile (header + @SITE + @ SCOM + @  SLB header + 6 layers = 10 lines minimum)
                 i += 10;
             } else {
@@ -58,7 +56,9 @@ impl SoilProfile {
         }
 
         if profiles.is_empty() {
-            return Err(SoilError::ParseError("No valid soil profiles found".to_string()));
+            return Err(SoilError::ParseError(
+                "No valid soil profiles found".to_string(),
+            ));
         }
 
         Ok(profiles)
@@ -76,14 +76,14 @@ impl SoilProfile {
 
         // Parse header line: *ID    COUNTRY_ALPHA3    TextureName   DEPTH    SOURCE
         let (id, mut site, metadata) = Self::parse_header(lines[0])?;
-        
+
         // Parse @SITE line (returns location and scs_family)
         let (location, scs_family) = Self::parse_site(lines[1], lines[2])?;
         site.scs_family = scs_family;
-        
+
         // Parse @ SCOM line
         let properties = Self::parse_scom(lines[3], lines[4])?;
-        
+
         // Parse @  SLB section (layers)
         let layers = Self::parse_layers(&lines[5..])?;
 
@@ -96,26 +96,30 @@ impl SoilProfile {
             metadata,
         })
     }
-    
+
     /// Parse the header line (first line starting with *)
     fn parse_header(line: &str) -> Result<(String, SiteProperties, Metadata)> {
         // Format: *ID    COUNTRY_ALPHA3    TextureName   DEPTH    SOURCE
         // Example: *GI02792815    GIB        Loam   200    ISRIC soilgrids + HC27
         let parts: Vec<&str> = line.split_whitespace().collect();
-        
+
         if parts.len() < 5 {
-            return Err(SoilError::ParseError(format!("Invalid header line: {}", line)));
+            return Err(SoilError::ParseError(format!(
+                "Invalid header line: {}",
+                line
+            )));
         }
 
         let id = parts[0].trim_start_matches('*').to_string();
         let country_code_alpha3 = parts[1].to_string();
         let texture_name = parts[2].to_string();
-        let max_depth_cm = parts[3].parse::<u32>()
+        let max_depth_cm = parts[3]
+            .parse::<u32>()
             .map_err(|_| SoilError::InvalidValue {
                 field: "max_depth_cm".to_string(),
                 value: parts[3].to_string(),
             })?;
-        
+
         // Rest is the source (may contain spaces)
         let source = parts[4..].join(" ");
 
@@ -138,18 +142,23 @@ impl SoilProfile {
     fn parse_site(_header_line: &str, data_line: &str) -> Result<(Location, String)> {
         // Data line format: -99    CC    LAT    LON    SCS_FAMILY
         let parts: Vec<&str> = data_line.split_whitespace().collect();
-        
+
         if parts.len() < 5 {
-            return Err(SoilError::ParseError(format!("Invalid @SITE line: {}", data_line)));
+            return Err(SoilError::ParseError(format!(
+                "Invalid @SITE line: {}",
+                data_line
+            )));
         }
 
         let country_code = parts[1].to_string();
-        let lat = parts[2].parse::<f64>()
+        let lat = parts[2]
+            .parse::<f64>()
             .map_err(|_| SoilError::InvalidValue {
                 field: "lat".to_string(),
                 value: parts[2].to_string(),
             })?;
-        let lon = parts[3].parse::<f64>()
+        let lon = parts[3]
+            .parse::<f64>()
             .map_err(|_| SoilError::InvalidValue {
                 field: "lon".to_string(),
                 value: parts[3].to_string(),
@@ -169,9 +178,12 @@ impl SoilProfile {
     fn parse_scom(_header_line: &str, data_line: &str) -> Result<SiteWideProperties> {
         // Data line format: SCOM  SALB  SLU1  SLDR  SLRO  SLNF  SLPF  SMHB  SMPX  SMKE
         let parts: Vec<&str> = data_line.split_whitespace().collect();
-        
+
         if parts.len() < 10 {
-            return Err(SoilError::ParseError(format!("Invalid @ SCOM line: {}", data_line)));
+            return Err(SoilError::ParseError(format!(
+                "Invalid @ SCOM line: {}",
+                data_line
+            )));
         }
 
         Ok(SiteWideProperties {
@@ -209,9 +221,12 @@ impl SoilProfile {
     /// Parse @  SLB section (layer data)
     fn parse_layers(lines: &[&str]) -> Result<Vec<SoilLayer>> {
         // Skip the header line (@  SLB ...)
-        let data_lines: Vec<&str> = lines.iter()
+        let data_lines: Vec<&str> = lines
+            .iter()
             .skip(1)
-            .filter(|line| !line.trim().is_empty() && !line.starts_with('@') && !line.starts_with('*'))
+            .filter(|line| {
+                !line.trim().is_empty() && !line.starts_with('@') && !line.starts_with('*')
+            })
             .take(NUM_LAYERS)
             .copied()
             .collect();
@@ -220,13 +235,16 @@ impl SoilProfile {
             return Err(SoilError::ParseError("No layer data found".to_string()));
         }
 
-        data_lines.iter().map(|line| Self::parse_layer(line)).collect()
+        data_lines
+            .iter()
+            .map(|line| Self::parse_layer(line))
+            .collect()
     }
 
     /// Parse a single layer line
     fn parse_layer(line: &str) -> Result<SoilLayer> {
         let parts: Vec<&str> = line.split_whitespace().collect();
-        
+
         if parts.len() < LAYER_FIELDS_COUNT {
             return Err(SoilError::ParseError(format!(
                 "Invalid layer line: expected {} fields, got {}",
@@ -275,7 +293,7 @@ impl SoilProfile {
     /// Convert this SoilProfile to .SOL format string
     pub fn to_sol_format(&self) -> String {
         let mut output = String::new();
-        
+
         // Helper to format Option<f64> - None becomes "-99.0"
         let fmt_optional = |opt: Option<f64>| -> String {
             match opt {
@@ -283,7 +301,7 @@ impl SoilProfile {
                 None => "-99.0".to_string(),
             }
         };
-        
+
         // Helper for layer values with 3 decimal places
         let fmt_layer_value = |opt: Option<f64>| -> String {
             match opt {
@@ -291,7 +309,7 @@ impl SoilProfile {
                 None => "-99.0".to_string(),
             }
         };
-        
+
         // Header line: *ID    COUNTRY_ALPHA3    TextureName   DEPTH    SOURCE
         output.push_str(&format!(
             "*{:<14} {:<10} {:>10} {:>5}    {}\n",
@@ -301,22 +319,19 @@ impl SoilProfile {
             self.site.max_depth_cm,
             self.metadata.source
         ));
-        
+
         // @SITE header
         output.push_str("@SITE        COUNTRY          LAT     LONG SCS Family\n");
-        
+
         // @SITE data
         output.push_str(&format!(
             " -99              {:>2} {:>11.3} {:>9.3}     {}\n",
-            self.location.country_code,
-            self.location.lat,
-            self.location.lon,
-            self.site.scs_family
+            self.location.country_code, self.location.lat, self.location.lon, self.site.scs_family
         ));
-        
+
         // @ SCOM header
         output.push_str("@ SCOM  SALB  SLU1  SLDR  SLRO  SLNF  SLPF  SMHB  SMPX  SMKE\n");
-        
+
         // @ SCOM data
         output.push_str(&format!(
             "    {} {:5.2} {:5.2} {:5.2} {:5.2} {:5.2} {:5.2} {} {} {}\n",
@@ -331,38 +346,36 @@ impl SoilProfile {
             self.properties.smpx,
             self.properties.smke
         ));
-        
+
         // @  SLB header
         output.push_str("@  SLB  SLMH  SLLL  SDUL  SSAT  SRGF  SSKS  SBDM  SLOC  SLCL  SLSI  SLCF  SLNI  SLHW  SLHB  SCEC  SADC\n");
-        
+
         // Layer data - using 3 decimal places for most values, 2 for percentages
         for layer in &self.layers {
             output.push_str(&format!(
                 " {:>5} {:<5} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}\n",
                 layer.slb,
                 layer.slmh,
-                fmt_layer_value(layer.slll),  // 3 decimals
-                fmt_layer_value(layer.sdul),  // 3 decimals
-                fmt_layer_value(layer.ssat),  // 3 decimals
-                fmt_optional(layer.srgf),     // 2 decimals
-                fmt_optional(layer.ssks),     // 2 decimals
-                fmt_optional(layer.sbdm),     // 2 decimals
-                fmt_optional(layer.sloc),     // 2 decimals
-                fmt_optional(layer.slcl),     // 2 decimals
-                fmt_optional(layer.slsi),     // 2 decimals
-                fmt_optional(layer.slcf),     // 2 decimals
-                fmt_optional(layer.slni),     // 2 decimals
-                fmt_optional(layer.slhw),     // 2 decimals
-                fmt_optional(layer.slhb),     // 2 decimals
-                fmt_optional(layer.scec),     // 2 decimals (actually 1 decimal in original)
-                fmt_optional(layer.sadc),     // 2 decimals
+                fmt_layer_value(layer.slll), // 3 decimals
+                fmt_layer_value(layer.sdul), // 3 decimals
+                fmt_layer_value(layer.ssat), // 3 decimals
+                fmt_optional(layer.srgf),    // 2 decimals
+                fmt_optional(layer.ssks),    // 2 decimals
+                fmt_optional(layer.sbdm),    // 2 decimals
+                fmt_optional(layer.sloc),    // 2 decimals
+                fmt_optional(layer.slcl),    // 2 decimals
+                fmt_optional(layer.slsi),    // 2 decimals
+                fmt_optional(layer.slcf),    // 2 decimals
+                fmt_optional(layer.slni),    // 2 decimals
+                fmt_optional(layer.slhw),    // 2 decimals
+                fmt_optional(layer.slhb),    // 2 decimals
+                fmt_optional(layer.scec),    // 2 decimals (actually 1 decimal in original)
+                fmt_optional(layer.sadc),    // 2 decimals
             ));
         }
-        
+
         output
     }
-
-    
 }
 
 #[cfg(test)]
@@ -390,10 +403,10 @@ mod tests {
     fn test_parse_header_extracts_all_fields() {
         let line = "*GI02792815    GIB        Loam   200    ISRIC soilgrids + HC27";
         let result = SoilProfile::parse_header(line);
-        
+
         assert!(result.is_ok());
         let (id, site, metadata) = result.unwrap();
-        
+
         assert_eq!(id, "GI02792815");
         assert_eq!(site.country_code_alpha3, "GIB");
         assert_eq!(site.texture, "Loam");
@@ -401,4 +414,3 @@ mod tests {
         assert_eq!(metadata.source, "ISRIC soilgrids + HC27");
     }
 }
-

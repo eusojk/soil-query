@@ -1,12 +1,12 @@
 //! API request handlers
 
+use crate::{db::DbState, models::*};
 use axum::{
+    Json,
     extract::{Query, State},
     http::StatusCode,
     response::{IntoResponse, Response},
-    Json,
 };
-use crate::{db::DbState, models::*};
 
 /// Root endpoint
 pub async fn root() -> &'static str {
@@ -21,7 +21,11 @@ pub async fn root() -> &'static str {
     )
 )]
 pub async fn health(State(state): State<DbState>) -> Json<HealthResponse> {
-    let status = if state.is_ready() { "ok" } else { "degraded - database not loaded" };
+    let status = if state.is_ready() {
+        "ok"
+    } else {
+        "degraded - database not loaded"
+    };
     Json(HealthResponse {
         status: status.to_string(),
         version: env!("CARGO_PKG_VERSION").to_string(),
@@ -62,10 +66,9 @@ pub async fn get_soil(
     }
 
     // Lock the database connection
-    let conn = connection.lock()
-        .map_err(|_| AppError::DatabaseError {
-            message: "Failed to acquire database lock".to_string(),
-        })?;
+    let conn = connection.lock().map_err(|_| AppError::DatabaseError {
+        message: "Failed to acquire database lock".to_string(),
+    })?;
 
     // Find nearest profile
     let (profile, distance) = crate::db::find_nearest_profile(&conn, params.lat, params.lon)
@@ -81,7 +84,8 @@ pub async fn get_soil(
                 StatusCode::OK,
                 [("Content-Type", "text/plain")],
                 sol_content,
-            ).into_response())
+            )
+                .into_response())
         }
         _ => {
             let response = SoilResponse {

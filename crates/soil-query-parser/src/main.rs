@@ -1,8 +1,8 @@
 //! soil-query-parser: Parse .SOL files into SQLite database
 
 mod db;
-mod validation;
 mod report;
+mod validation;
 
 use anyhow::{Context, Result};
 use clap::Parser;
@@ -60,7 +60,8 @@ fn main() -> Result<()> {
         .into_iter()
         .filter_map(|e| e.ok())
         .filter(|e| {
-            e.path().extension()
+            e.path()
+                .extension()
                 .and_then(|s| s.to_str())
                 .map(|s| s.eq_ignore_ascii_case("SOL"))
                 .unwrap_or(false)
@@ -86,7 +87,8 @@ fn main() -> Result<()> {
 
     // Process each file
     for sol_file in &sol_files {
-        let filename = sol_file.file_name()
+        let filename = sol_file
+            .file_name()
             .and_then(|s| s.to_str())
             .unwrap_or("unknown");
 
@@ -125,13 +127,11 @@ fn main() -> Result<()> {
     report.print_summary();
 
     // Save report
-    report.save(&args.report)
-        .context("Failed to save report")?;
+    report.save(&args.report).context("Failed to save report")?;
     println!("\nReport saved to: {:?}", args.report);
 
     Ok(())
 }
-
 
 /// Process a single .SOL file
 fn process_file(
@@ -140,13 +140,13 @@ fn process_file(
     report: &mut report::ParseReport,
     verbose: bool,
 ) -> Result<usize> {
-    let filename = file_path.file_name()
+    let filename = file_path
+        .file_name()
         .and_then(|s| s.to_str())
         .unwrap_or("unknown");
 
     // Read file
-    let content = std::fs::read_to_string(file_path)
-        .context("Failed to read file")?;
+    let content = std::fs::read_to_string(file_path).context("Failed to read file")?;
 
     // Parse profiles
     let profiles = soil_query::SoilProfile::from_sol_format(&content)
@@ -164,13 +164,22 @@ fn process_file(
 
     // For large files, show progress
     let show_progress = profiles.len() > 10000;
-    let progress_interval = if show_progress { profiles.len() / 100 } else { usize::MAX };
+    let progress_interval = if show_progress {
+        profiles.len() / 100
+    } else {
+        usize::MAX
+    };
 
     // Process each profile
     for (idx, profile) in profiles.iter().enumerate() {
         // Show progress for large files
         if show_progress && idx % progress_interval == 0 && idx > 0 {
-            print!("\r  Progress: {}/{} ({:.0}%)", idx, profiles.len(), (idx as f64 / profiles.len() as f64) * 100.0);
+            print!(
+                "\r  Progress: {}/{} ({:.0}%)",
+                idx,
+                profiles.len(),
+                (idx as f64 / profiles.len() as f64) * 100.0
+            );
             use std::io::Write;
             std::io::stdout().flush().ok();
         }
@@ -204,4 +213,3 @@ fn process_file(
 
     Ok(profiles.len())
 }
-

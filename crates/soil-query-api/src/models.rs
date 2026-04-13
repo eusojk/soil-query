@@ -1,8 +1,8 @@
 //! API request and response models
 
 use serde::{Deserialize, Serialize};
-use utoipa::{IntoParams, ToSchema};
 use soil_query::SoilProfile;
+use utoipa::{IntoParams, ToSchema};
 
 /// Query parameters for soil endpoint
 #[derive(Debug, Deserialize, IntoParams)]
@@ -49,4 +49,3 @@ pub struct PropertyDefinition {
 pub struct ErrorResponse {
     pub error: String,
 }
-

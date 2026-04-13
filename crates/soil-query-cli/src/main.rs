@@ -61,13 +61,21 @@ fn main() -> Result<()> {
             "Error:".red().bold(),
             cli.database
         );
-        eprintln!("\n{}", "Run soil-query-parser to create the database first.".yellow());
+        eprintln!(
+            "\n{}",
+            "Run soil-query-parser to create the database first.".yellow()
+        );
         std::process::exit(1);
     }
 
     // Execute command
     match cli.command {
-        Commands::Find { lat, lon, format, output } => {
+        Commands::Find {
+            lat,
+            lon,
+            format,
+            output,
+        } => {
             cmd_find(&cli.database, lat, lon, &format, output.as_deref())?;
         }
         Commands::Definitions => {
@@ -104,15 +112,17 @@ fn cmd_find(
     println!("  Location: {:.3}°, {:.3}°", lat, lon);
 
     // Open database
-    let conn = rusqlite::Connection::open(db_path)
-        .context("Failed to open database")?;
+    let conn = rusqlite::Connection::open(db_path).context("Failed to open database")?;
 
     // Find nearest profile (using same logic as API)
     let (profile, distance) = find_nearest_profile(&conn, lat, lon)?;
 
     println!("{} Found profile!", "✓".green().bold());
     println!("  ID: {}", profile.id.bright_white());
-    println!("  Location: {:.3}°, {:.3}°", profile.location.lat, profile.location.lon);
+    println!(
+        "  Location: {:.3}°, {:.3}°",
+        profile.location.lat, profile.location.lon
+    );
     println!("  Distance: {:.2} km", distance);
     println!();
 
@@ -149,24 +159,42 @@ fn print_profile_summary(profile: &soil_query::SoilProfile, distance: f64) {
     println!("{}", "Profile Summary".bold().underline());
     println!();
     println!("  {}: {}", "ID".bright_cyan(), profile.id);
-    println!("  {}: {}", "Country".bright_cyan(), profile.location.country_code);
-    println!("  {}: {:.3}°, {:.3}°", "Location".bright_cyan(), profile.location.lat, profile.location.lon);
+    println!(
+        "  {}: {}",
+        "Country".bright_cyan(),
+        profile.location.country_code
+    );
+    println!(
+        "  {}: {:.3}°, {:.3}°",
+        "Location".bright_cyan(),
+        profile.location.lat,
+        profile.location.lon
+    );
     println!("  {}: {:.2} km", "Distance".bright_cyan(), distance);
     println!("  {}: {}", "Texture".bright_cyan(), profile.site.texture);
-    println!("  {}: {} cm", "Max Depth".bright_cyan(), profile.site.max_depth_cm);
+    println!(
+        "  {}: {} cm",
+        "Max Depth".bright_cyan(),
+        profile.site.max_depth_cm
+    );
     println!("  {}: {}", "Source".bright_cyan(), profile.metadata.source);
     println!();
 
     println!("{}", "Soil Layers".bold().underline());
     println!();
-    println!("  {:<8} {:<8} {:<8} {:<8} {:<8} {:<8}",
-        "Depth", "Texture", "WP", "FC", "SAT", "pH");
-    println!("  {:<8} {:<8} {:<8} {:<8} {:<8} {:<8}",
-        "(cm)", "", "(cm³/cm³)", "(cm³/cm³)", "(cm³/cm³)", "");
+    println!(
+        "  {:<8} {:<8} {:<8} {:<8} {:<8} {:<8}",
+        "Depth", "Texture", "WP", "FC", "SAT", "pH"
+    );
+    println!(
+        "  {:<8} {:<8} {:<8} {:<8} {:<8} {:<8}",
+        "(cm)", "", "(cm³/cm³)", "(cm³/cm³)", "(cm³/cm³)", ""
+    );
     println!("  {}", "─".repeat(60));
 
     for layer in &profile.layers {
-        println!("  {:<8} {:<8} {:<8} {:<8} {:<8} {:<8}",
+        println!(
+            "  {:<8} {:<8} {:<8} {:<8} {:<8} {:<8}",
             layer.slb,
             layer.slmh,
             format_optional(layer.slll),
@@ -228,33 +256,25 @@ fn cmd_explain(abbreviation: &str) -> Result<()> {
         "SLLL" => Some((
             "Lower limit (wilting point)",
             "cm³/cm³",
-            "Volumetric water content at which plants can no longer extract water (permanent wilting point)"
+            "Volumetric water content at which plants can no longer extract water (permanent wilting point)",
         )),
         "SDUL" => Some((
             "Drained upper limit (field capacity)",
             "cm³/cm³",
-            "Volumetric water content after excess water has drained by gravity"
+            "Volumetric water content after excess water has drained by gravity",
         )),
         "SSAT" => Some((
             "Upper limit, saturated",
             "cm³/cm³",
-            "Volumetric water content when all pore space is filled with water"
+            "Volumetric water content when all pore space is filled with water",
         )),
-        "SBDM" => Some((
-            "Bulk density",
-            "g/cm³",
-            "Mass of dry soil per unit volume"
-        )),
+        "SBDM" => Some(("Bulk density", "g/cm³", "Mass of dry soil per unit volume")),
         "SLOC" => Some((
             "Organic carbon",
             "%",
-            "Percentage of organic carbon in the soil"
+            "Percentage of organic carbon in the soil",
         )),
-        "SLHW" => Some((
-            "pH in water",
-            "",
-            "Soil pH measured in water solution"
-        )),
+        "SLHW" => Some(("pH in water", "", "Soil pH measured in water solution")),
         _ => None,
     };
 
@@ -271,9 +291,16 @@ fn cmd_explain(abbreviation: &str) -> Result<()> {
             println!();
         }
         None => {
-            println!("{} Unknown property: {}", "Error:".red().bold(), abbreviation);
+            println!(
+                "{} Unknown property: {}",
+                "Error:".red().bold(),
+                abbreviation
+            );
             println!();
-            println!("Run {} to see all available properties.", "soil-query definitions".yellow());
+            println!(
+                "Run {} to see all available properties.",
+                "soil-query definitions".yellow()
+            );
         }
     }
 
@@ -289,7 +316,11 @@ fn cmd_stats(db_path: &PathBuf) -> Result<()> {
 
     // Total profiles
     let total: i64 = conn.query_row("SELECT COUNT(*) FROM soil_profiles", [], |row| row.get(0))?;
-    println!("  {}: {}", "Total Profiles".bright_cyan(), total.to_string().bright_white());
+    println!(
+        "  {}: {}",
+        "Total Profiles".bright_cyan(),
+        total.to_string().bright_white()
+    );
 
     // Profiles by country (top 10)
     let mut stmt = conn.prepare(
@@ -297,7 +328,7 @@ fn cmd_stats(db_path: &PathBuf) -> Result<()> {
          FROM soil_profiles 
          GROUP BY country_code 
          ORDER BY count DESC 
-         LIMIT 10"
+         LIMIT 10",
     )?;
 
     let countries: Vec<(String, i64)> = stmt
@@ -308,7 +339,8 @@ fn cmd_stats(db_path: &PathBuf) -> Result<()> {
     println!("  {}", "Top 10 Countries:".bold());
     for (country, count) in countries {
         let percentage = (count as f64 / total as f64) * 100.0;
-        println!("    {} {} profiles ({:.1}%)",
+        println!(
+            "    {} {} profiles ({:.1}%)",
             country.bright_yellow(),
             count.to_string().bright_white(),
             percentage
@@ -340,7 +372,7 @@ fn find_nearest_profile(
              WHERE min_lat >= ?1 AND max_lat <= ?2
                AND min_lon >= ?3 AND max_lon <= ?4
          )
-         LIMIT 100"
+         LIMIT 100",
     )?;
 
     let rows = stmt.query_map(

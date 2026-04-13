@@ -1,6 +1,6 @@
 //! Validation functions for soil profiles
 
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 use soil_query::SoilProfile;
 
 /// Validate a soil profile before inserting into database
@@ -37,7 +37,7 @@ fn validate_layer_count(profile: &SoilProfile) -> Result<()> {
 /// Validate layer depths are in expected order
 fn validate_layer_depths(profile: &SoilProfile) -> Result<()> {
     let expected_depths = [5, 15, 30, 60, 100, 200];
-    
+
     for (i, layer) in profile.layers.iter().enumerate() {
         if layer.slb != expected_depths[i] {
             bail!(
@@ -49,7 +49,7 @@ fn validate_layer_depths(profile: &SoilProfile) -> Result<()> {
             );
         }
     }
-    
+
     Ok(())
 }
 
@@ -63,10 +63,10 @@ mod tests {
         let content = std::fs::read_to_string("../../test_data/GI.SOL")?;
         let profiles = SoilProfile::from_sol_format(&content)?;
         let profile = &profiles[0];
-        
+
         // Should not error
         validate_profile(profile)?;
-        
+
         Ok(())
     }
 
@@ -97,11 +97,10 @@ mod tests {
         let content = std::fs::read_to_string("../../test_data/GI.SOL")?;
         let profiles = SoilProfile::from_sol_format(&content)?;
         let profile = &profiles[0];
-        
+
         // Should pass - GI.SOL has correct depths
         validate_layer_depths(profile)?;
-        
+
         Ok(())
     }
 }
-

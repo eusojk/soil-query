@@ -10,13 +10,13 @@ pub type Result<T> = std::result::Result<T, SoilError>;
 pub enum SoilError {
     /// Failed to parse .SOL format
     ParseError(String),
-    
+
     /// Invalid coordinate values
     InvalidCoordinate { lat: f64, lon: f64 },
-    
+
     /// Missing required field in .SOL file
     MissingField(String),
-    
+
     /// Invalid numeric value
     InvalidValue { field: String, value: String },
 }

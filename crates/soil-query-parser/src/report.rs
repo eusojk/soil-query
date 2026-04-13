@@ -70,7 +70,7 @@ impl ParseReport {
     pub fn record_success(&mut self, country_code: &str) {
         self.summary.total_profiles += 1;
         self.summary.successful += 1;
-        
+
         self.by_country
             .entry(country_code.to_string())
             .or_insert(CountryStats {
@@ -83,13 +83,13 @@ impl ParseReport {
     /// Record an error
     pub fn record_error(&mut self, file: String, profile_id: Option<String>, error: String) {
         self.summary.failed += 1;
-        
+
         self.errors.push(ErrorRecord {
             file: file.clone(),
             profile_id,
             error,
         });
-        
+
         // Extract country code from filename (e.g., "US.SOL" -> "US")
         if let Some(country_code) = file.strip_suffix(".SOL") {
             self.by_country
@@ -105,19 +105,19 @@ impl ParseReport {
     /// Finalize the report with performance metrics
     pub fn finalize(&mut self, duration_seconds: f64, db_path: &Path) -> Result<()> {
         self.summary.duration_seconds = duration_seconds;
-        
+
         // Calculate profiles per second
         if duration_seconds > 0.0 {
-            self.performance.profiles_per_second = 
+            self.performance.profiles_per_second =
                 self.summary.total_profiles as f64 / duration_seconds;
         }
-        
+
         // Get database size
         if db_path.exists() {
             let metadata = std::fs::metadata(db_path)?;
             self.performance.database_size_mb = metadata.len() as f64 / 1_048_576.0;
         }
-        
+
         Ok(())
     }
 
@@ -138,9 +138,15 @@ impl ParseReport {
         println!("Successful:         {}", self.summary.successful);
         println!("Failed:             {}", self.summary.failed);
         println!("Duration:           {:.2}s", self.summary.duration_seconds);
-        println!("Profiles/second:    {:.0}", self.performance.profiles_per_second);
-        println!("Database size:      {:.2} MB", self.performance.database_size_mb);
-        
+        println!(
+            "Profiles/second:    {:.0}",
+            self.performance.profiles_per_second
+        );
+        println!(
+            "Database size:      {:.2} MB",
+            self.performance.database_size_mb
+        );
+
         if !self.errors.is_empty() {
             println!("\nErrors: {}", self.errors.len());
             for error in self.errors.iter().take(5) {
@@ -150,7 +156,7 @@ impl ParseReport {
                 println!("  ... and {} more", self.errors.len() - 5);
             }
         }
-        
+
         println!("{}", "=".repeat(60));
     }
 }
@@ -168,11 +174,11 @@ mod tests {
     #[test]
     fn test_report_record_success() {
         let mut report = ParseReport::new();
-        
+
         report.record_success("US");
         report.record_success("US");
         report.record_success("GI");
-        
+
         assert_eq!(report.summary.total_profiles, 3);
         assert_eq!(report.summary.successful, 3);
         assert_eq!(report.by_country.get("US").unwrap().profiles, 2);
@@ -182,13 +188,13 @@ mod tests {
     #[test]
     fn test_report_record_error() {
         let mut report = ParseReport::new();
-        
+
         report.record_error(
             "US.SOL".to_string(),
             Some("US12345678".to_string()),
             "Invalid coordinates".to_string(),
         );
-        
+
         assert_eq!(report.summary.failed, 1);
         assert_eq!(report.errors.len(), 1);
         assert_eq!(report.by_country.get("US").unwrap().errors, 1);
@@ -198,20 +204,18 @@ mod tests {
     fn test_report_finalize() -> Result<()> {
         let mut report = ParseReport::new();
         report.summary.total_profiles = 1000;
-        
+
         let temp_db = std::env::temp_dir().join("test_report.db");
         std::fs::write(&temp_db, b"test data")?;
-        
+
         report.finalize(10.0, &temp_db)?;
-        
+
         assert_eq!(report.summary.duration_seconds, 10.0);
         assert_eq!(report.performance.profiles_per_second, 100.0);
         assert!(report.performance.database_size_mb > 0.0);
-        
+
         std::fs::remove_file(&temp_db)?;
-        
+
         Ok(())
     }
 }
-
-

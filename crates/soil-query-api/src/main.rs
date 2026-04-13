@@ -4,10 +4,7 @@ mod db;
 mod handlers;
 mod models;
 
-use axum::{
-    routing::get,
-    Router,
-};
+use axum::{Router, routing::get};
 use std::net::SocketAddr;
 use std::path::PathBuf;
 use tower_http::cors::{Any, CorsLayer};
@@ -16,15 +13,11 @@ use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 
 // Re-export for tests
-pub use db::{init_database, DbState};
+pub use db::{DbState, init_database};
 
 #[derive(OpenApi)]
 #[openapi(
-    paths(
-        handlers::health,
-        handlers::get_soil,
-        handlers::get_definitions,
-    ),
+    paths(handlers::health, handlers::get_soil, handlers::get_definitions,),
     components(schemas(
         models::HealthResponse,
         models::SoilResponse,
@@ -41,15 +34,11 @@ pub use db::{init_database, DbState};
         title = "soil-query API",
         version = "0.1.0",
         description = "Query global soil profiles for 225 countries at 10km resolution. Returns DSSAT-compatible .SOL format or JSON.",
-        contact(
-            name = "eusojk",
-            url = "https://soilmap.josuekpodo.com"
-        ),
+        contact(name = "eusojk", url = "https://soilmap.josuekpodo.com"),
         license(
             name = "MIT OR Apache-2.0",
             url = "https://github.com/eusojk/soil-query/blob/main/LICENSE-MIT"
         )
-
     )
 )]
 pub struct ApiDoc;
@@ -85,19 +74,16 @@ async fn main() -> anyhow::Result<()> {
         .init();
 
     // Load database path from environment or use default
-    let db_path = std::env::var("DATABASE_PATH")
-        .unwrap_or_else(|_| "output/soil_data.db".to_string());
+    let db_path =
+        std::env::var("DATABASE_PATH").unwrap_or_else(|_| "output/soil_data.db".to_string());
     let db_path = PathBuf::from(db_path);
 
     tracing::info!("Loading database from: {:?}", db_path);
 
     // Initialize database (disk-based SQLite)
     let db_state = init_database(&db_path).await?;
-    
-    tracing::info!(
-        "Database opened: {} profiles",
-        db_state.profile_count
-    );
+
+    tracing::info!("Database opened: {} profiles", db_state.profile_count);
 
     // Build application
     let app = build_router(db_state);
