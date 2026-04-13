@@ -51,7 +51,10 @@ pub fn build_router(db_state: DbState) -> Router {
         .allow_headers(Any);
 
     Router::new()
-        .merge(SwaggerUi::new("/swagger-ui").url("../api-docs/openapi.json", ApiDoc::openapi()))
+        .merge(
+            SwaggerUi::new("/swagger-ui")
+                .url("/soil-query-api/api-docs/openapi.json", ApiDoc::openapi()),
+        )
         .route("/", get(handlers::root))
         .route("/health", get(handlers::health))
         .route("/soil", get(handlers::get_soil))
