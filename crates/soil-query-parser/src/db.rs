@@ -175,7 +175,10 @@ mod tests {
         let conn = init_database(&temp_db)?;
 
         // Parse a test profile
-        let content = std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../test_data/GI.SOL"))?;
+        let content = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../test_data/GI.SOL"
+        ))?;
         let profiles = SoilProfile::from_sol_format(&content)?;
         let profile = &profiles[0];
 
