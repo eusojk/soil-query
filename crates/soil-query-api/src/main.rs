@@ -34,7 +34,6 @@ pub use db::{DbState, init_database};
         title = "soil-query API",
         version = "0.1.0",
         description = "Query global soil profiles for 225 countries at 10km resolution. Returns DSSAT-compatible .SOL format or JSON.",
-        contact(name = "eusojk", url = "https://soilmap.josuekpodo.com"),
         license(
             name = "MIT OR Apache-2.0",
             url = "https://github.com/eusojk/soil-query/blob/main/LICENSE-MIT"
@@ -52,7 +51,7 @@ pub fn build_router(db_state: DbState) -> Router {
         .allow_headers(Any);
 
     Router::new()
-        .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDoc::openapi()))
+        .merge(SwaggerUi::new("/swagger-ui").url("../api-docs/openapi.json", ApiDoc::openapi()))
         .route("/", get(handlers::root))
         .route("/health", get(handlers::health))
         .route("/soil", get(handlers::get_soil))
